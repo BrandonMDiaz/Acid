@@ -1,2 +1,0 @@
-# Acid
-data mining proyect
