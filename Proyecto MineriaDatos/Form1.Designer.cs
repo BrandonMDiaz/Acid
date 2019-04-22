@@ -39,7 +39,7 @@
             this.btnGuardar = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.falsos_predictores_btn = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
@@ -186,7 +186,7 @@
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
             this.tabPage2.Controls.Add(this.falsos_predictores_btn);
-            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.box_plot_btn);
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -205,27 +205,28 @@
             this.falsos_predictores_btn.Name = "falsos_predictores_btn";
             this.falsos_predictores_btn.Size = new System.Drawing.Size(167, 77);
             this.falsos_predictores_btn.TabIndex = 3;
-            this.falsos_predictores_btn.Text = "Falsos predictores";
+            this.falsos_predictores_btn.Text = "Frecuencia";
             this.falsos_predictores_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.falsos_predictores_btn.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // box_plot_btn
             // 
-            this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.button2.FlatAppearance.BorderSize = 3;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(6, 3);
-            this.button2.Name = "button2";
-            this.button2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button2.Size = new System.Drawing.Size(169, 77);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Cargar Archivo";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button2.UseVisualStyleBackColor = false;
+            this.box_plot_btn.BackColor = System.Drawing.Color.White;
+            this.box_plot_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.box_plot_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.box_plot_btn.FlatAppearance.BorderSize = 3;
+            this.box_plot_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.box_plot_btn.Image = ((System.Drawing.Image)(resources.GetObject("box_plot_btn.Image")));
+            this.box_plot_btn.Location = new System.Drawing.Point(6, 3);
+            this.box_plot_btn.Name = "box_plot_btn";
+            this.box_plot_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.box_plot_btn.Size = new System.Drawing.Size(169, 77);
+            this.box_plot_btn.TabIndex = 2;
+            this.box_plot_btn.Text = "Box plot";
+            this.box_plot_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.box_plot_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.box_plot_btn.UseVisualStyleBackColor = false;
+            this.box_plot_btn.Click += new System.EventHandler(this.box_plot_btn_Click);
             // 
             // tabPage3
             // 
@@ -315,7 +316,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(38, 194);
+            this.button1.Location = new System.Drawing.Point(49, 211);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(109, 23);
             this.button1.TabIndex = 4;
@@ -416,7 +417,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button falsos_predictores_btn;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button box_plot_btn;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label nombre_lbl;
         private System.Windows.Forms.Label tipo_dato_lbl;
