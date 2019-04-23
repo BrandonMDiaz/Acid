@@ -227,6 +227,7 @@ namespace Proyecto_MineriaDatos
             }
         }
 
+        
         //mostrar informacion de una columna al hacer click sobre su nombre
         private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -234,14 +235,12 @@ namespace Proyecto_MineriaDatos
             int missingValues = 0;
             // string tipoDeDato = this.tipoDeDato[e.ColumnIndex.ToString()];
             string tipoDeDato = this.tipoDeDato[e.ColumnIndex];
-            MessageBox.Show(tipoDeDato);
             string tipoDeDato2 = "";
             string data = string.Empty;
             //iteramos todas las filas de una columna para poder saber los valores
             //faltantes y mas informacion.
             for (int rows = 0; rows < dataGridView.Rows.Count-1; rows++)
             {
-                MessageBox.Show("adentro");
                 //revisamos que tipo de dato es la columna columna
                 switch (tipoDeDato)
                 {
@@ -330,6 +329,7 @@ namespace Proyecto_MineriaDatos
                     //agregamos la lista que creamos anteriormente a la lista de listas
                     //que tenemos
                     numericosFlotantes.Add(list);
+                    nombresColumnas.Add(dataGridView.Columns[column].Name);
                 }
             }
             //abrimos la form de boxplot y le mandamos todas las columnas, sus nombres y el
@@ -337,6 +337,52 @@ namespace Proyecto_MineriaDatos
             Form2 boxPlot = new Form2(totalInstancias,numericosFlotantes,nombresColumnas);
             boxPlot.Show();
             //boxPlot.FormClosed += new FormClosedEventHandler(Form_Closed);
+        }
+
+        private void falsos_predictores_btn_Click(object sender, EventArgs e)
+        {
+            //creamos listas para los valores categoricos
+            //esto para poder pasarselos a la form de diagrama de barras
+
+            List<List<string>> categoricosLista = new List<List<string>>();
+            int totalInstancias = dataGridView.Rows.Count;
+            List<string> nombresColumnas = new List<string>();
+
+            //itereamos las columnas que su tipo de dato sea entero u flotante
+            //ya que con estas solamente se puede trabajar
+            for (int column = 0; column < dataGridView.ColumnCount; column++)
+            {
+                //obtenemos el tipo de dato de la columna
+                string tipoDeDato = this.tipoDeDato[column];
+                //creamos una lista donde meteremos toda 1 columna
+                List<string> list = new List<string>();
+                //Solo tomamos en cuenta las columnas de string (categoricas)
+                if (tipoDeDato == "System.String")
+                {
+                    //iteramos sobre toda 1 columna
+                    for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
+                    {
+                        //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
+                        if (dataGridView[column, rows] != null
+                            && dataGridView[column, rows].Value != DBNull.Value
+                            && (string)dataGridView[column, rows].Value != ""
+                            && (string)dataGridView[column, rows].Value != "?")  //value is not null
+                        {
+                            //vamos agregando las celdas a la lista
+                            //MessageBox.Show((string)dataGridView[column, rows].Value);
+                            list.Add(dataGridView[column, rows].Value.ToString());
+                        }
+                    }
+                    //agregamos la lista que creamos anteriormente a la lista de listas
+                    //que tenemos
+                    categoricosLista.Add(list);
+                    nombresColumnas.Add(dataGridView.Columns[column].Name);
+                }
+            }
+            //abrimos la form de boxplot y le mandamos todas las columnas, sus nombres y el
+            //total de instancias
+            Frecuencia boxPlot = new Frecuencia(categoricosLista, nombresColumnas);
+            boxPlot.Show();
         }
     }
 }

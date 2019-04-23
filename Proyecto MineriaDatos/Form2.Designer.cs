@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.media_lbl = new System.Windows.Forms.Label();
+            this.mediana_lbl = new System.Windows.Forms.Label();
+            this.moda_lbl = new System.Windows.Forms.Label();
+            this.desviacionE_lbl = new System.Windows.Forms.Label();
             this.clases_cb = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -47,18 +47,18 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(249, 14);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.BoxPlot;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.YValuesPerPoint = 6;
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.BoxPlot;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.YValuesPerPoint = 6;
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(547, 436);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -99,42 +99,42 @@
             this.label4.TabIndex = 4;
             this.label4.Text = "Desviacion Estandar";
             // 
-            // label5
+            // media_lbl
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(146, 156);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "label5";
+            this.media_lbl.AutoSize = true;
+            this.media_lbl.Location = new System.Drawing.Point(146, 156);
+            this.media_lbl.Name = "media_lbl";
+            this.media_lbl.Size = new System.Drawing.Size(35, 13);
+            this.media_lbl.TabIndex = 5;
+            this.media_lbl.Text = "label5";
             // 
-            // label6
+            // mediana_lbl
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(146, 197);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 13);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "label6";
+            this.mediana_lbl.AutoSize = true;
+            this.mediana_lbl.Location = new System.Drawing.Point(146, 197);
+            this.mediana_lbl.Name = "mediana_lbl";
+            this.mediana_lbl.Size = new System.Drawing.Size(35, 13);
+            this.mediana_lbl.TabIndex = 6;
+            this.mediana_lbl.Text = "label6";
             // 
-            // label7
+            // moda_lbl
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(146, 238);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "label7";
+            this.moda_lbl.AutoSize = true;
+            this.moda_lbl.Location = new System.Drawing.Point(146, 238);
+            this.moda_lbl.Name = "moda_lbl";
+            this.moda_lbl.Size = new System.Drawing.Size(35, 13);
+            this.moda_lbl.TabIndex = 7;
+            this.moda_lbl.Text = "label7";
             // 
-            // label8
+            // desviacionE_lbl
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(146, 275);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(35, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "label8";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
+            this.desviacionE_lbl.AutoSize = true;
+            this.desviacionE_lbl.Location = new System.Drawing.Point(146, 275);
+            this.desviacionE_lbl.Name = "desviacionE_lbl";
+            this.desviacionE_lbl.Size = new System.Drawing.Size(35, 13);
+            this.desviacionE_lbl.TabIndex = 8;
+            this.desviacionE_lbl.Text = "label8";
+            this.desviacionE_lbl.Click += new System.EventHandler(this.label8_Click);
             // 
             // clases_cb
             // 
@@ -161,10 +161,10 @@
             this.ClientSize = new System.Drawing.Size(800, 463);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.clases_cb);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.desviacionE_lbl);
+            this.Controls.Add(this.moda_lbl);
+            this.Controls.Add(this.mediana_lbl);
+            this.Controls.Add(this.media_lbl);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -185,10 +185,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label media_lbl;
+        private System.Windows.Forms.Label mediana_lbl;
+        private System.Windows.Forms.Label moda_lbl;
+        private System.Windows.Forms.Label desviacionE_lbl;
         private System.Windows.Forms.ComboBox clases_cb;
         private System.Windows.Forms.Label label9;
     }

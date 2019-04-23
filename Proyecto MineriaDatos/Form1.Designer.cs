@@ -38,7 +38,7 @@
             this.salir = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.falsos_predictores_btn = new System.Windows.Forms.Button();
+            this.frecuencia_btn = new System.Windows.Forms.Button();
             this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -185,7 +185,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
-            this.tabPage2.Controls.Add(this.falsos_predictores_btn);
+            this.tabPage2.Controls.Add(this.frecuencia_btn);
             this.tabPage2.Controls.Add(this.box_plot_btn);
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
@@ -194,20 +194,21 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Analisis estadistico";
             // 
-            // falsos_predictores_btn
+            // frecuencia_btn
             // 
-            this.falsos_predictores_btn.BackColor = System.Drawing.Color.White;
-            this.falsos_predictores_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.falsos_predictores_btn.FlatAppearance.BorderSize = 3;
-            this.falsos_predictores_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.falsos_predictores_btn.Image = ((System.Drawing.Image)(resources.GetObject("falsos_predictores_btn.Image")));
-            this.falsos_predictores_btn.Location = new System.Drawing.Point(181, 3);
-            this.falsos_predictores_btn.Name = "falsos_predictores_btn";
-            this.falsos_predictores_btn.Size = new System.Drawing.Size(167, 77);
-            this.falsos_predictores_btn.TabIndex = 3;
-            this.falsos_predictores_btn.Text = "Frecuencia";
-            this.falsos_predictores_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.falsos_predictores_btn.UseVisualStyleBackColor = false;
+            this.frecuencia_btn.BackColor = System.Drawing.Color.White;
+            this.frecuencia_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.frecuencia_btn.FlatAppearance.BorderSize = 3;
+            this.frecuencia_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.frecuencia_btn.Image = ((System.Drawing.Image)(resources.GetObject("frecuencia_btn.Image")));
+            this.frecuencia_btn.Location = new System.Drawing.Point(181, 3);
+            this.frecuencia_btn.Name = "frecuencia_btn";
+            this.frecuencia_btn.Size = new System.Drawing.Size(167, 77);
+            this.frecuencia_btn.TabIndex = 3;
+            this.frecuencia_btn.Text = "Frecuencia";
+            this.frecuencia_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.frecuencia_btn.UseVisualStyleBackColor = false;
+            this.frecuencia_btn.Click += new System.EventHandler(this.falsos_predictores_btn_Click);
             // 
             // box_plot_btn
             // 
@@ -380,6 +381,8 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Proyecto Mineria de Datos";
@@ -416,7 +419,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button falsos_predictores_btn;
+        private System.Windows.Forms.Button frecuencia_btn;
         private System.Windows.Forms.Button box_plot_btn;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label nombre_lbl;
