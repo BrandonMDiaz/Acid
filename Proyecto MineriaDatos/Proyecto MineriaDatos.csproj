@@ -78,6 +78,18 @@
     <Compile Include="Frecuencia.Designer.cs">
       <DependentUpon>Frecuencia.cs</DependentUpon>
     </Compile>
+    <Compile Include="LlenarValores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LlenarValores.Designer.cs">
+      <DependentUpon>LlenarValores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Outliers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Outliers.Designer.cs">
+      <DependentUpon>Outliers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="editGridView.resx">
@@ -94,6 +106,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Frecuencia.resx">
       <DependentUpon>Frecuencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LlenarValores.resx">
+      <DependentUpon>LlenarValores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Outliers.resx">
+      <DependentUpon>Outliers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

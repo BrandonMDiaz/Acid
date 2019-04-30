@@ -36,16 +36,16 @@ namespace Proyecto_MineriaDatos
             //chart1.Series.Add;
         }
 
-        //sacar moda
-        public float modaFunc(List<float> numbers)
+        //sacar moda 
+        static public float modaFunc(List<float> numbers)
         {
             var moda = numbers.GroupBy(n => n). // ordena
             OrderByDescending(g => g.Count()). //ordena descendentes de mas repetidos
             Select(g => g.Key).FirstOrDefault(); // regresa el que mas se repitió
             return moda;
         }
-        //sacar mediana
-        public float medianaFunc(List<float> numbers)
+        //sacar mediana (enviar lista ordenada)
+        static public float medianaFunc(List<float> numbers)
         {
             int numberCount = numbers.Count();
             int halfIndex = numbers.Count() / 2;
@@ -63,7 +63,7 @@ namespace Proyecto_MineriaDatos
         }
 
         //funcion para calcular desviacion estandar
-        public float desviacionEstandarFunc(List<float> lista, float media)
+        static public float desviacionEstandarFunc(List<float> lista, float media)
         {
 
             float desviacionEstandar = 0;
@@ -133,6 +133,65 @@ namespace Proyecto_MineriaDatos
             int index = (int)clases_cb.SelectedIndex;  
             string nombre = (string)clases_cb.SelectedItem;
             this.boxPlot(index);
+        }
+
+        static public List<List<float>> outliers(List<float> columna)
+        {
+            columna.Sort();
+
+            float q1;
+            float q3;
+
+            //sacar q1
+            int mid25 = (columna.Count() / 2) / 2;
+            //vemos si la mitad es un numero par o impar
+            //si es par sacamos el promedio de los dos numeros para obtener la madiana
+            if ((mid25 % 2) == 0)
+            {
+                //
+                q1 = ((columna.ElementAt(mid25) + columna.ElementAt(mid25 - 1)) / 2);
+            }
+            else
+            {
+                q1 = columna.ElementAt(mid25);
+
+            }
+            //sacar q3
+            int mid75 = (columna.Count() / 2) + ((columna.Count() / 2) / 2);
+            if ((mid75 % 2) == 0)
+            {
+                q3 = ((columna.ElementAt(mid75) + columna.ElementAt(mid75 - 1)) / 2);
+            }
+            else
+            {
+                q3 = columna.ElementAt(mid75);
+            }
+
+            //sacar outliers
+            List<List<float>> outliersLista = new List<List<float>>();
+            List<float> iqr15 = new List<float>();
+            List<float> iqr30 = new List<float>();
+
+            float rangoIntercuartil = q3 - q1;
+
+            foreach (var valor in columna)
+            {
+                
+                if( (valor >= q3 + (rangoIntercuartil * 1.5) && valor < q3 + (rangoIntercuartil * 3)) 
+                    || (valor <= q1 - (rangoIntercuartil * 1.5) && valor > q1 - (rangoIntercuartil * 3)))
+                {
+                    iqr15.Add(valor);
+                }
+                else if (valor >=  q3 + (rangoIntercuartil * 3) || valor <= q1 - (rangoIntercuartil * 3))
+                {
+                    iqr30.Add(valor);
+                }
+            }
+            outliersLista.Add(iqr15);
+            outliersLista.Add(iqr30);
+        
+            return outliersLista;
+
         }
     }
 }

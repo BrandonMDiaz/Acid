@@ -41,6 +41,12 @@
             this.frecuencia_btn = new System.Windows.Forms.Button();
             this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.tipografia_btn = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.outliers_btn = new System.Windows.Forms.Button();
+            this.valores_faltantes_btn = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.atributos_data = new System.Windows.Forms.Panel();
@@ -58,6 +64,7 @@
             this.tabControl2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.atributos_data.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -232,11 +239,128 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
+            this.tabPage3.Controls.Add(this.button8);
+            this.tabPage3.Controls.Add(this.button7);
+            this.tabPage3.Controls.Add(this.tipografia_btn);
+            this.tabPage3.Controls.Add(this.button5);
+            this.tabPage3.Controls.Add(this.outliers_btn);
+            this.tabPage3.Controls.Add(this.valores_faltantes_btn);
             this.tabPage3.Location = new System.Drawing.Point(4, 29);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1077, 89);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Limpieza de datos";
+            // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.Color.White;
+            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button8.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.button8.FlatAppearance.BorderSize = 3;
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
+            this.button8.Location = new System.Drawing.Point(881, 6);
+            this.button8.Name = "button8";
+            this.button8.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.button8.Size = new System.Drawing.Size(169, 77);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "Normalizacion";
+            this.button8.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button8.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button8.UseVisualStyleBackColor = false;
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.Color.White;
+            this.button7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button7.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.button7.FlatAppearance.BorderSize = 3;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
+            this.button7.Location = new System.Drawing.Point(706, 6);
+            this.button7.Name = "button7";
+            this.button7.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.button7.Size = new System.Drawing.Size(169, 77);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "Muestreo de datos";
+            this.button7.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button7.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button7.UseVisualStyleBackColor = false;
+            // 
+            // tipografia_btn
+            // 
+            this.tipografia_btn.BackColor = System.Drawing.Color.White;
+            this.tipografia_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tipografia_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.tipografia_btn.FlatAppearance.BorderSize = 3;
+            this.tipografia_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.tipografia_btn.Image = ((System.Drawing.Image)(resources.GetObject("tipografia_btn.Image")));
+            this.tipografia_btn.Location = new System.Drawing.Point(531, 6);
+            this.tipografia_btn.Name = "tipografia_btn";
+            this.tipografia_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tipografia_btn.Size = new System.Drawing.Size(169, 77);
+            this.tipografia_btn.TabIndex = 6;
+            this.tipografia_btn.Text = "Errores tipográficos";
+            this.tipografia_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tipografia_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tipografia_btn.UseVisualStyleBackColor = false;
+            this.tipografia_btn.Click += new System.EventHandler(this.tipografia_btn_Click);
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.White;
+            this.button5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.button5.FlatAppearance.BorderSize = 3;
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
+            this.button5.Location = new System.Drawing.Point(356, 6);
+            this.button5.Name = "button5";
+            this.button5.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.button5.Size = new System.Drawing.Size(169, 77);
+            this.button5.TabIndex = 5;
+            this.button5.Text = "Buscar y remplazar";
+            this.button5.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // outliers_btn
+            // 
+            this.outliers_btn.BackColor = System.Drawing.Color.White;
+            this.outliers_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.outliers_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.outliers_btn.FlatAppearance.BorderSize = 3;
+            this.outliers_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.outliers_btn.Image = ((System.Drawing.Image)(resources.GetObject("outliers_btn.Image")));
+            this.outliers_btn.Location = new System.Drawing.Point(181, 6);
+            this.outliers_btn.Name = "outliers_btn";
+            this.outliers_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.outliers_btn.Size = new System.Drawing.Size(169, 77);
+            this.outliers_btn.TabIndex = 4;
+            this.outliers_btn.Text = "Outliers";
+            this.outliers_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.outliers_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.outliers_btn.UseVisualStyleBackColor = false;
+            this.outliers_btn.Click += new System.EventHandler(this.outliers_btn_Click);
+            // 
+            // valores_faltantes_btn
+            // 
+            this.valores_faltantes_btn.BackColor = System.Drawing.Color.White;
+            this.valores_faltantes_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.valores_faltantes_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.valores_faltantes_btn.FlatAppearance.BorderSize = 3;
+            this.valores_faltantes_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.valores_faltantes_btn.Image = ((System.Drawing.Image)(resources.GetObject("valores_faltantes_btn.Image")));
+            this.valores_faltantes_btn.Location = new System.Drawing.Point(6, 6);
+            this.valores_faltantes_btn.Name = "valores_faltantes_btn";
+            this.valores_faltantes_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.valores_faltantes_btn.Size = new System.Drawing.Size(169, 77);
+            this.valores_faltantes_btn.TabIndex = 3;
+            this.valores_faltantes_btn.Text = "Llenar valores";
+            this.valores_faltantes_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.valores_faltantes_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.valores_faltantes_btn.UseVisualStyleBackColor = false;
+            this.valores_faltantes_btn.Click += new System.EventHandler(this.valores_faltantes_btn_Click);
             // 
             // dataGridView
             // 
@@ -317,7 +441,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(49, 211);
+            this.button1.Location = new System.Drawing.Point(37, 182);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(109, 23);
             this.button1.TabIndex = 4;
@@ -375,7 +499,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(34)))), ((int)(((byte)(57)))));
-            this.ClientSize = new System.Drawing.Size(1092, 562);
+            this.ClientSize = new System.Drawing.Size(1097, 561);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.atributos_data);
             this.Controls.Add(this.dataGridView);
@@ -391,6 +515,7 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.atributos_data.ResumeLayout(false);
             this.atributos_data.PerformLayout();
@@ -426,6 +551,12 @@
         private System.Windows.Forms.Label tipo_dato_lbl;
         private System.Windows.Forms.Label proporcion_lbl;
         private System.Windows.Forms.Label valores_faltantes_lbl;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button tipografia_btn;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button outliers_btn;
+        private System.Windows.Forms.Button valores_faltantes_btn;
     }
 }
 
