@@ -134,26 +134,28 @@ namespace Proyecto_MineriaDatos
                     if (ofd.ShowDialog() == DialogResult.OK) {
                         //cargar datos al datagridview
                         dataGridView.DataSource = LeerCSV(ofd.FileName);
+                        instancias_totales_lbl.Text = (dataGridView.Rows.Count - 1).ToString();
                         //desactivar el ordenar
                         foreach (DataGridViewColumn column in dataGridView.Columns)
                         {
                             column.SortMode = DataGridViewColumnSortMode.NotSortable;
                         }
-                        for (int column = 0; column < dataGridView.ColumnCount; column++)
+                        for (int column = 0; column < dataGridView.Columns.Count; column++)
                         {
                             for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
                             {
                                 //si alguna celda esta vacia o es igual a "?" la marcamos
-                                if (dataGridView[this.indexColumna, rows] == null
-                                    && dataGridView[this.indexColumna, rows].Value == DBNull.Value
-                                    && (string)dataGridView[this.indexColumna, rows].Value == ""
-                                    && (string)dataGridView[this.indexColumna, rows].Value == "?")
+                                if (dataGridView[column, rows] == null
+                                    || dataGridView[column, rows].Value == DBNull.Value
+                                    || (string)dataGridView[column, rows].Value == ""
+                                    || (string)dataGridView[column, rows].Value == "?")
                                 {
-                                    dataGridView.Rows[rows].Cells[column].Style.BackColor = Color.Red;
+                                    dataGridView[column, rows].Value = "?";
+                                    dataGridView[column, rows].Style.BackColor = Color.Red;
+                                    
                                 }
                             }
                         }
-
 
                     }
                 }
@@ -242,7 +244,9 @@ namespace Proyecto_MineriaDatos
                     columnTipo = frm.getTipo();
                     dataGridView.Columns.Add(columnNombre, columnNombre);
                     dataGridView.Columns[dataGridView.Columns.Count - 1].ValueType = System.Type.GetType("System." + columnTipo);
-                    tipoDeDato.Add("System." + columnTipo);
+                    this.tipoDeDato.Add("System." + columnTipo);
+                    dataGridView.Columns[dataGridView.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+
                 }
             }
             //MessageBox.Show(dataGridView.Columns[dataGridView.Columns.Count - 1].ValueType.ToString());
@@ -278,6 +282,7 @@ namespace Proyecto_MineriaDatos
                     if (oneCell.Selected)
                         dataGridView.Rows.RemoveAt(oneCell.RowIndex);
                 }
+                instancias_totales_lbl.Text = (dataGridView.Rows.Count - 1).ToString();
             }
         }
 
@@ -364,7 +369,7 @@ namespace Proyecto_MineriaDatos
             //esto para poder pasarselos a la form de boxplot
             //List<List<int>> numericosEnteros = new List<List<int>>();
             List<List<float>> numericosFlotantes = new List<List<float>>();
-            int totalInstancias = dataGridView.Rows.Count;
+            int totalInstancias = dataGridView.Rows.Count - 1;
             List<string> nombresColumnas = new List<string>();
 
             //itereamos las columnas que su tipo de dato sea entero u flotante
@@ -410,7 +415,7 @@ namespace Proyecto_MineriaDatos
             //esto para poder pasarselos a la form de diagrama de barras
 
             List<List<string>> categoricosLista = new List<List<string>>();
-            int totalInstancias = dataGridView.Rows.Count;
+            int totalInstancias = dataGridView.Rows.Count - 1;
             List<string> nombresColumnas = new List<string>();
 
             //itereamos las columnas que su tipo de dato sea entero u flotante
@@ -606,108 +611,208 @@ namespace Proyecto_MineriaDatos
         //sacar outliers
         private void outliers_btn_Click(object sender, EventArgs e)
         {
-            bool sustituir = false;
-            bool sustituir_iqr5 = false;
-            
-            //obtenemos el tipo de dato de la columna
-            string tipoDeDato = this.tipoDeDato[indexColumna];
-            //sacamos nombre de la columna 
-            string nombreColumna = dataGridView.Columns[this.indexColumna].Name.ToString();
-
-            //lista donde guardaremos toda la columna que selecciono el usuario
-            List<float> columna = obtenerListaDeColumna(this.indexColumna);
-
-            float media, mediana, moda, valorRecomendado;
-            valorRecomendado = 0;
-            columna.Sort();
-            media = columna.Average();
-            mediana = Form2.medianaFunc(columna);
-            moda = Form2.modaFunc(columna);
-
-            if (media == mediana && mediana == moda)
+            if (dataGridView.Columns.Count > 0 && dataGridView.Rows.Count > 0)
             {
-                //"La distribucion no cuenta con sesgo \r\n por lo tanto se" +
-                //" recomienda usar la media";
-                valorRecomendado = media;
-            }
-            else if (media > mediana)
-            {
-                // "La distribucion  está sesgada, por lo tanto \r\n" +
-                // "se recomienda usar la mediana";
-                valorRecomendado = mediana;
+                bool sustituir = false;
+                bool sustituir_iqr5 = false;
 
-            }
-            else if (media < mediana)
-            {
-               // "La distribucion  está sesgada, por lo tanto \r\n" +
-               // "se recomienda usar la mediana";
-                valorRecomendado = mediana;
+                //obtenemos el tipo de dato de la columna
+                string tipoDeDato = this.tipoDeDato[indexColumna];
+                //sacamos nombre de la columna 
+                string nombreColumna = dataGridView.Columns[this.indexColumna].Name.ToString();
 
-            }
+                //lista donde guardaremos toda la columna que selecciono el usuario
+                List<float> columna = obtenerListaDeColumna(this.indexColumna);
 
-            List<List<float>> listaDeListas = Form2.outliers(columna);
-            using (Outliers frm = new Outliers( listaDeListas, nombreColumna,
-                valorRecomendado))
-            {
-                if (frm.ShowDialog() == DialogResult.OK)
+                float media, mediana, moda, valorRecomendado;
+                valorRecomendado = 0;
+                columna.Sort();
+                media = columna.Average();
+                mediana = Form2.medianaFunc(columna);
+                moda = Form2.modaFunc(columna);
+
+                if (media == mediana && mediana == moda)
                 {
-                    sustituir = frm.getSustituir();
-                    sustituir_iqr5 = frm.getSustituirIQr5();
+                    //"La distribucion no cuenta con sesgo \r\n por lo tanto se" +
+                    //" recomienda usar la media";
+                    valorRecomendado = media;
                 }
-            }
-            //si se selecciono sustituir valores de iqr5 tambien en las opciones
-            if (sustituir && sustituir_iqr5)
-            {
-                //revisamos que las listas no esten vacias (tengan mas de 1 elemento)
-                if (listaDeListas.ElementAt(0).Count > 0 || listaDeListas.ElementAt(1).Count > 0)
+                else if (media > mediana)
                 {
-                    //iteramos la columna en busca de valores que sean outliers
-                    for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
+                    // "La distribucion  está sesgada, por lo tanto \r\n" +
+                    // "se recomienda usar la mediana";
+                    valorRecomendado = mediana;
+
+                }
+                else if (media < mediana)
+                {
+                    // "La distribucion  está sesgada, por lo tanto \r\n" +
+                    // "se recomienda usar la mediana";
+                    valorRecomendado = mediana;
+
+                }
+
+                List<List<float>> listaDeListas = Form2.outliers(columna);
+                using (Outliers frm = new Outliers(listaDeListas, nombreColumna,
+                    valorRecomendado))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
-                        if (dataGridView[this.indexColumna, rows] != null
-                            && dataGridView[this.indexColumna, rows].Value != DBNull.Value
-                            && (string)dataGridView[this.indexColumna, rows].Value != ""
-                            && (string)dataGridView[this.indexColumna, rows].Value != "?")
+                        sustituir = frm.getSustituir();
+                        sustituir_iqr5 = frm.getSustituirIQr5();
+                    }
+                }
+                //si se selecciono sustituir valores de iqr5 tambien en las opciones
+                if (sustituir && sustituir_iqr5)
+                {
+                    //revisamos que las listas no esten vacias (tengan mas de 1 elemento)
+                    if (listaDeListas.ElementAt(0).Count > 0 || listaDeListas.ElementAt(1).Count > 0)
+                    {
+                        //iteramos la columna en busca de valores que sean outliers
+                        for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
                         {
-                            //si contiene el valor entonces se sustituye
-                            if (listaDeListas.ElementAt(0).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString()))
-                            || listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
+                            //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
+                            if (dataGridView[this.indexColumna, rows] != null
+                                && dataGridView[this.indexColumna, rows].Value != DBNull.Value
+                                && (string)dataGridView[this.indexColumna, rows].Value != ""
+                                && (string)dataGridView[this.indexColumna, rows].Value != "?")
                             {
-                                dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
+                                //si contiene el valor entonces se sustituye
+                                if (listaDeListas.ElementAt(0).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString()))
+                                || listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
+                                {
+                                    dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
+                                }
+                            }
+                        }
+                    }
+
+                }
+                else if (sustituir)
+                {
+                    if (listaDeListas.ElementAt(1).Count > 0)
+                    {
+                        for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
+                        {
+                            //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
+                            if (dataGridView[this.indexColumna, rows] != null
+                                && dataGridView[this.indexColumna, rows].Value != DBNull.Value
+                                && (string)dataGridView[this.indexColumna, rows].Value != ""
+                                && (string)dataGridView[this.indexColumna, rows].Value != "?")
+                            {
+                                //si el elemento está en la lista de outliers se sustituye
+                                if (listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
+                                {
+                                    dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
+                                }
                             }
                         }
                     }
                 }
-
             }
-            else if (sustituir)
+            else
             {
-                if (listaDeListas.ElementAt(1).Count > 0)
-                {
-                    for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
-                    {
-                        //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
-                        if (dataGridView[this.indexColumna, rows] != null
-                            && dataGridView[this.indexColumna, rows].Value != DBNull.Value
-                            && (string)dataGridView[this.indexColumna, rows].Value != ""
-                            && (string)dataGridView[this.indexColumna, rows].Value != "?")
-                        {
-                            //si el elemento está en la lista de outliers se sustituye
-                            if (listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
-                            {
-                                dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
-                            }
-                        }
-                    }
-                }
+                MessageBox.Show("No hay datos");
             }
+           
 
         }
 
         private void tipografia_btn_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void borrar_columna_btn_Click(object sender, EventArgs e)
+        {
+            dataGridView.Columns.RemoveAt(this.indexColumna);
+        }
+
+        private void correlacion_btn_Click(object sender, EventArgs e)
+        {
+
+        }
+       
+        public void pearson(int index1, int index2)
+        {
+            //se busca que se comparen numericos con numericos 
+            if (tipoDeDato[index1] == tipoDeDato[index2] 
+                || (tipoDeDato[index1] == "float" && tipoDeDato[index2] == "int")
+                || (tipoDeDato[index1] == "int" && tipoDeDato[index2] == "float") )
+            {
+                List<float> columna1 = columnToListFloat(index1);
+                List<float> columna2 = columnToListFloat(index2);
+                
+                //se saca el promedio de las dos listas
+                float media1 = columna1.Average();
+                float media2 = columna2.Average();
+
+                //obtenemos la deviacion estandar
+                float desviacionEstandar1 = Form2.desviacionEstandarFunc(columna1,media1);
+                float desviacionEstandar2 = Form2.desviacionEstandarFunc(columna2, media2);
+
+                //iteramos todas las instancias de los dos atributos, por cada lista
+                // le restamos al dato la media y el resultado de cada lista se multiplica entre
+                //el otro resultado de la otra lista
+                float sumatoria = 0;
+                for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
+                {
+                    sumatoria += (columna1[i] - media1) * (columna2[i] - media2);
+                }
+                float abajo = desviacionEstandar1 * desviacionEstandar2 * (dataGridView.Rows.Count - 1);
+         
+            }
+        }
+
+        public void chiCuadrada(int index1,int index2)
+        {
+            //se trabaja con los valores categoricos
+            if (this.tipoDeDato[index1] == this.tipoDeDato[index2]
+                && this.tipoDeDato[index1] == "string") 
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// hacer una lista con la informacion en una columna
+        /// </summary>
+        /// <param int="index"> index de columna que vamos a hacer lista</param>
+        /// <returns></returns>
+        public List<float> columnToListFloat(int index)
+        {
+            List<float> columna = new List<float>();
+            for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
+            {
+                //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
+                if (dataGridView[index, rows] != null
+                    && dataGridView[index, rows].Value != DBNull.Value
+                    && (string)dataGridView[index, rows].Value != ""
+                    && (string)dataGridView[index, rows].Value != "?")
+                {
+                    //agregamos el valor a la lista 
+                    columna.Add(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString()));
+                }
+            }
+            return columna;
+        }
+
+        public List<string> columnToListString(int index)
+        {
+            List<string> columna = new List<string>();
+            for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
+            {
+                //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
+                if (dataGridView[index, rows] != null
+                    && dataGridView[index, rows].Value != DBNull.Value
+                    && (string)dataGridView[index, rows].Value != ""
+                    && (string)dataGridView[index, rows].Value != "?")
+                {
+                    //agregamos el valor a la lista 
+                    columna.Add(dataGridView[this.indexColumna, rows].Value.ToString());
+                }
+            }
+            return columna;
         }
     }
 }

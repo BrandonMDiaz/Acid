@@ -81,7 +81,8 @@ namespace Proyecto_MineriaDatos
 
 
             float media = columna.Average();
-            mediana_lbl.Text = medianaFunc(columna).ToString();
+            float mediana = medianaFunc(columna);
+            mediana_lbl.Text = mediana.ToString();
             media_lbl.Text = media.ToString();
             moda_lbl.Text = modaFunc(columna).ToString();
             desviacionE_lbl.Text = desviacionEstandarFunc(columna,media).ToString();
@@ -109,6 +110,7 @@ namespace Proyecto_MineriaDatos
             }
             //sacar q3
             int mid75 = (columna.Count() / 2) + ((columna.Count() / 2) / 2);
+            
             if ((mid75 % 2) == 0)
             {
                 q3 = ((columna.ElementAt(mid75) + columna.ElementAt(mid75 - 1)) / 2);
@@ -117,6 +119,8 @@ namespace Proyecto_MineriaDatos
             {
                 q3 = columna.ElementAt(mid75);
             }
+            q1_lbl.Text = q1.ToString();
+            q3_lbl.Text = q3.ToString();
 
             chart1.Series.Clear();
             chart1.Series.Add(nombreColumnas[index]).ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.BoxPlot;
