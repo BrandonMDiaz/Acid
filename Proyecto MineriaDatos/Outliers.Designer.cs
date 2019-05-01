@@ -46,6 +46,7 @@
             this.iqr15_lbox.Name = "iqr15_lbox";
             this.iqr15_lbox.Size = new System.Drawing.Size(168, 95);
             this.iqr15_lbox.TabIndex = 0;
+            this.iqr15_lbox.SelectedIndexChanged += new System.EventHandler(this.iqr15_lbox_SelectedIndexChanged);
             // 
             // iqr3_lbox
             // 

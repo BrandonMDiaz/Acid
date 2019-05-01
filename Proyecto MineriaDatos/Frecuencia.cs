@@ -30,7 +30,7 @@ namespace Proyecto_MineriaDatos
         }
         private void frecuencia(int index)
         {
-            List<string> columna = listaStrings[index];
+            List<string> columna = this.listaStrings[index];
             Dictionary<string, int> frecuencia = new Dictionary<string, int>();
             foreach(string elemento in columna)
             {

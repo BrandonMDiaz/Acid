@@ -33,28 +33,91 @@ namespace Proyecto_MineriaDatos
         {
             InitializeComponent();
         }
+
         // funcion para leer un archivo .data (aun no está terminada)
         public DataTable LeerData(string fileName)
         {
             this.fileName = fileName;
             DataTable dt = new DataTable("Data");
-            using (OleDbConnection cn = new OleDbConnection("Provider= Microsoft.jet.OLEDB.4.0;Data Source=\"" +
-               Path.GetDirectoryName(fileName) + "\";Extended Properties= 'text;HDR=yes;FMT= Delimited(,)';"))
+
+            //informacion general
+            //descripcion de la base de datos
+            //base de datos
+            using (var reader = new StreamReader(Path.GetDirectoryName(fileName)))
             {
-                using (OleDbCommand cmd = new OleDbCommand(string.Format("select *from [{0}]", new FileInfo(fileName).Name), cn))
+                List<string> listA = new List<string>();
+                List<string> listB = new List<string>();
+                //parte en la que se encuentra el archivo
+                // 0 = informacion general
+                // 1 = descripcion de la base de datos
+                // 2 = base de datos
+                int partes = 0;
+                string linea = "";
+                string letra = "";
+                string palabra = "";
+                //leemos el primer caracter
+                letra = reader.Read().ToString();
+                //si el primer caracter es el de la parte uno entonces se especifica
+                if (letra == "%" && reader.Peek().ToString() == "%" || letra == "%")
                 {
-                    cn.Open();
-                    using (OleDbDataAdapter adapter = new OleDbDataAdapter(cmd))
+                    partes = 0;
+                }
+                //si el primer caracter es el de la parte dos se especifica
+                else if (letra == "@")
+                {
+                    partes = 1;
+                }
+                //si el primer caracter no es ninguno de los anteriores se especifica
+                else
+                {
+                    partes = 2;
+                }
+                //para poder entrar aqui tenemos que estar en etapa 0 o 1
+                if(partes < 2) {
+                    while (!reader.EndOfStream)
                     {
-                        adapter.Fill(dt);
+                        //leemos letra por letra
+                        letra = reader.Read().ToString();
+                        if (letra != "")
+                        {
+                            palabra += letra;
+                        }
+                        else
+                        {
+                            palabra = "";
+                        }
+
+                        if (letra == "@")
+                        {
+                            partes = 2;
+                        }
+                        else if (palabra == "@data")
+                        {
+
+                        }
+                        linea += letra;
+
+                        if (partes == 0)
+                        {
+                            
+                        }
+                        else if (partes == 1)
+                        {
+
+                        }
+                        else if (partes == 2)
+                        {
+
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
+                
             }
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                this.tipoDeDato.Add(dt.Columns[i].DataType.ToString());
-
-            }
+            
             return dt;
         }
 
@@ -720,7 +783,39 @@ namespace Proyecto_MineriaDatos
 
         private void tipografia_btn_Click(object sender, EventArgs e)
         {
+            if(this.indexColumna == 1)
+            {
+                
+                List<string> columna = columnToListString(this.indexColumna);
+                Dictionary<string, int> frecuencia = new Dictionary<string, int>();
+                foreach (string elemento in columna)
+                {
+                    if (!frecuencia.ContainsKey(elemento))
+                        frecuencia.Add(elemento, 1);
+                    else
+                        frecuencia[elemento]++;
+                }
 
+                List<string> posibleErrorTipografico = new List<string>();
+                List<string> datosBase = new List<string>();
+
+                //value es el nombre y frecuencia[key] un entero de cuanto se repitio
+                foreach (string value in frecuencia.Keys)
+                {
+                    datosBase.Add(value);
+                    //posible palabra mal escrita
+                    if (frecuencia[value] < 3) {
+                        posibleErrorTipografico.Add(value);
+                    }
+                }
+
+                //falta buscar valores fuera del rango
+
+                using (Tipografia frm = new Tipografia(posibleErrorTipografico, datosBase))
+                {
+
+                }
+            }
         }
 
         private void borrar_columna_btn_Click(object sender, EventArgs e)
@@ -770,7 +865,16 @@ namespace Proyecto_MineriaDatos
             if (this.tipoDeDato[index1] == this.tipoDeDato[index2]
                 && this.tipoDeDato[index1] == "string") 
             {
-
+                //sacar frecuencia de 1 columna
+                //List<string> columna = listaStrings[index];
+                Dictionary<string, int> frecuencia = new Dictionary<string, int>();
+                //foreach (string elemento in columna)
+                //{
+                    //if (!frecuencia.ContainsKey(elemento))
+                        //frecuencia.Add(elemento, 1);
+                    //else
+                        //frecuencia[elemento]++;
+                //}
             }
         }
 

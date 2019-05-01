@@ -48,5 +48,10 @@ namespace Proyecto_MineriaDatos
             }
             this.sustituir = true; 
         }
+
+        private void iqr15_lbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
