@@ -949,12 +949,21 @@ namespace Proyecto_MineriaDatos
         {
             if (dataGridView.Columns.Count > 0)
             {
+                //index columna
+                int column = this.indexColumna;
+                //nombre columna
+                string columnName = dataGridView.Columns[column].Name;
+                //posicion del form
+                int x, y;
                 bool repetir = true;
                 string buscar, remplazar;
+                buscar = remplazar = "";
+                x = y = 0;
                 while (repetir)
                 {   
                     
-                    using (Buscar_remplazar frm = new Buscar_remplazar(buscar,remplazar))
+                    using (Buscar_remplazar frm = new Buscar_remplazar(buscar,remplazar,
+                        columnName,x,y))
                     {
                         var showDialog = frm.ShowDialog();
                         if (showDialog == DialogResult.OK)
@@ -966,19 +975,50 @@ namespace Proyecto_MineriaDatos
                                 //remplazar 1
                                 if (resultado[2] == "uno")
                                 {
-                                    
+                                    buscar = resultado[0];
+                                    remplazar = resultado[1];
+
+                                    for (int i = 0; i < dataGridView.Rows.Count; i++)
+                                    {
+                                        if ((string)dataGridView[column, i].Value == resultado[0])
+                                        {
+                                            dataGridView[column, i].Value = resultado[1];
+                                            break;
+                                        }
+                                    }
                                 }
                                 //remplazar todos
                                 else if(resultado[2] == "todo")
                                 {
-
+                                    for (int i = 0; i < dataGridView.Rows.Count; i++)
+                                    {
+                                        if ((string)dataGridView[column, i].Value == resultado[0])
+                                        {
+                                            dataGridView[column, i].Value = resultado[1];
+                                        }
+                                    }
                                 }
                                 //buscar solamente
                                 else if(resultado[2] == "buscar")
                                 {
-
+                                    for (int row = 0; row < dataGridView.Rows.Count; row++)
+                                    {
+                                        if ((string)dataGridView[column, row].Value == resultado[0])
+                                        { 
+                                            dataGridView.ClearSelection();
+                                            dataGridView[column, row].Selected = true;
+                                            dataGridView.FirstDisplayedScrollingRowIndex = row;
+                                            dataGridView.Focus();
+                                            break;
+                                        }
+                                    }
                                 }
+                                buscar = resultado[0];
+                                remplazar = resultado[1];
                             }
+                            
+                            x = frm.getX();
+                            y = frm.getY();
                         }
                         else if (showDialog == DialogResult.Cancel)
                         {

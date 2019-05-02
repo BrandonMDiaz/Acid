@@ -43,7 +43,7 @@
             this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
+            this.muestreo_btn = new System.Windows.Forms.Button();
             this.tipografia_btn = new System.Windows.Forms.Button();
             this.buscar_remplazar_btn = new System.Windows.Forms.Button();
             this.outliers_btn = new System.Windows.Forms.Button();
@@ -260,7 +260,7 @@
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
             this.tabPage3.Controls.Add(this.button8);
-            this.tabPage3.Controls.Add(this.button7);
+            this.tabPage3.Controls.Add(this.muestreo_btn);
             this.tabPage3.Controls.Add(this.tipografia_btn);
             this.tabPage3.Controls.Add(this.buscar_remplazar_btn);
             this.tabPage3.Controls.Add(this.outliers_btn);
@@ -289,23 +289,23 @@
             this.button8.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.button8.UseVisualStyleBackColor = false;
             // 
-            // button7
+            // muestreo_btn
             // 
-            this.button7.BackColor = System.Drawing.Color.White;
-            this.button7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button7.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.button7.FlatAppearance.BorderSize = 3;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
-            this.button7.Location = new System.Drawing.Point(706, 6);
-            this.button7.Name = "button7";
-            this.button7.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button7.Size = new System.Drawing.Size(169, 77);
-            this.button7.TabIndex = 7;
-            this.button7.Text = "Muestreo de datos";
-            this.button7.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button7.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button7.UseVisualStyleBackColor = false;
+            this.muestreo_btn.BackColor = System.Drawing.Color.White;
+            this.muestreo_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.muestreo_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.muestreo_btn.FlatAppearance.BorderSize = 3;
+            this.muestreo_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.muestreo_btn.Image = ((System.Drawing.Image)(resources.GetObject("muestreo_btn.Image")));
+            this.muestreo_btn.Location = new System.Drawing.Point(706, 6);
+            this.muestreo_btn.Name = "muestreo_btn";
+            this.muestreo_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.muestreo_btn.Size = new System.Drawing.Size(169, 77);
+            this.muestreo_btn.TabIndex = 7;
+            this.muestreo_btn.Text = "Muestreo de datos";
+            this.muestreo_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.muestreo_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.muestreo_btn.UseVisualStyleBackColor = false;
             // 
             // tipografia_btn
             // 
@@ -603,7 +603,7 @@
         private System.Windows.Forms.Label proporcion_lbl;
         private System.Windows.Forms.Label valores_faltantes_lbl;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button muestreo_btn;
         private System.Windows.Forms.Button tipografia_btn;
         private System.Windows.Forms.Button buscar_remplazar_btn;
         private System.Windows.Forms.Button outliers_btn;
