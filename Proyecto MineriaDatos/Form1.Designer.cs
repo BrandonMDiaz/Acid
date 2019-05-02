@@ -37,6 +37,8 @@
             this.salir = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.falsos_predictores_btn = new System.Windows.Forms.Button();
+            this.correlacion_btn = new System.Windows.Forms.Button();
             this.frecuencia_btn = new System.Windows.Forms.Button();
             this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -49,6 +51,9 @@
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.atributos_data = new System.Windows.Forms.Panel();
+            this.borrar_columna_btn = new System.Windows.Forms.Button();
+            this.instancias_totales_lbl = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.nombre_lbl = new System.Windows.Forms.Label();
             this.tipo_dato_lbl = new System.Windows.Forms.Label();
             this.proporcion_lbl = new System.Windows.Forms.Label();
@@ -59,11 +64,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.correlacion_btn = new System.Windows.Forms.Button();
-            this.falsos_predictores_btn = new System.Windows.Forms.Button();
-            this.instancias_totales_lbl = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.borrar_columna_btn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -190,6 +190,37 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Analisis estadistico";
             // 
+            // falsos_predictores_btn
+            // 
+            this.falsos_predictores_btn.BackColor = System.Drawing.Color.White;
+            this.falsos_predictores_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.falsos_predictores_btn.FlatAppearance.BorderSize = 3;
+            this.falsos_predictores_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.falsos_predictores_btn.Image = ((System.Drawing.Image)(resources.GetObject("falsos_predictores_btn.Image")));
+            this.falsos_predictores_btn.Location = new System.Drawing.Point(527, 3);
+            this.falsos_predictores_btn.Name = "falsos_predictores_btn";
+            this.falsos_predictores_btn.Size = new System.Drawing.Size(167, 77);
+            this.falsos_predictores_btn.TabIndex = 5;
+            this.falsos_predictores_btn.Text = "Falsos predictores";
+            this.falsos_predictores_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.falsos_predictores_btn.UseVisualStyleBackColor = false;
+            // 
+            // correlacion_btn
+            // 
+            this.correlacion_btn.BackColor = System.Drawing.Color.White;
+            this.correlacion_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.correlacion_btn.FlatAppearance.BorderSize = 3;
+            this.correlacion_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.correlacion_btn.Image = ((System.Drawing.Image)(resources.GetObject("correlacion_btn.Image")));
+            this.correlacion_btn.Location = new System.Drawing.Point(354, 3);
+            this.correlacion_btn.Name = "correlacion_btn";
+            this.correlacion_btn.Size = new System.Drawing.Size(167, 77);
+            this.correlacion_btn.TabIndex = 4;
+            this.correlacion_btn.Text = "Correlacion";
+            this.correlacion_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.correlacion_btn.UseVisualStyleBackColor = false;
+            this.correlacion_btn.Click += new System.EventHandler(this.correlacion_btn_Click);
+            // 
             // frecuencia_btn
             // 
             this.frecuencia_btn.BackColor = System.Drawing.Color.White;
@@ -312,6 +343,7 @@
             this.buscar_remplazar_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.buscar_remplazar_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.buscar_remplazar_btn.UseVisualStyleBackColor = false;
+            this.buscar_remplazar_btn.Click += new System.EventHandler(this.buscar_remplazar_btn_Click);
             // 
             // outliers_btn
             // 
@@ -394,6 +426,34 @@
             this.atributos_data.Name = "atributos_data";
             this.atributos_data.Size = new System.Drawing.Size(206, 382);
             this.atributos_data.TabIndex = 9;
+            // 
+            // borrar_columna_btn
+            // 
+            this.borrar_columna_btn.Location = new System.Drawing.Point(38, 275);
+            this.borrar_columna_btn.Name = "borrar_columna_btn";
+            this.borrar_columna_btn.Size = new System.Drawing.Size(109, 45);
+            this.borrar_columna_btn.TabIndex = 14;
+            this.borrar_columna_btn.Text = "Borrar columna seleccionada";
+            this.borrar_columna_btn.UseVisualStyleBackColor = true;
+            this.borrar_columna_btn.Click += new System.EventHandler(this.borrar_columna_btn_Click);
+            // 
+            // instancias_totales_lbl
+            // 
+            this.instancias_totales_lbl.AutoSize = true;
+            this.instancias_totales_lbl.Location = new System.Drawing.Point(123, 175);
+            this.instancias_totales_lbl.Name = "instancias_totales_lbl";
+            this.instancias_totales_lbl.Size = new System.Drawing.Size(35, 13);
+            this.instancias_totales_lbl.TabIndex = 13;
+            this.instancias_totales_lbl.Text = "label7";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 175);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(92, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Instancias totales:";
             // 
             // nombre_lbl
             // 
@@ -484,65 +544,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1094, 51);
             this.panel3.TabIndex = 10;
-            // 
-            // correlacion_btn
-            // 
-            this.correlacion_btn.BackColor = System.Drawing.Color.White;
-            this.correlacion_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.correlacion_btn.FlatAppearance.BorderSize = 3;
-            this.correlacion_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.correlacion_btn.Image = ((System.Drawing.Image)(resources.GetObject("correlacion_btn.Image")));
-            this.correlacion_btn.Location = new System.Drawing.Point(354, 3);
-            this.correlacion_btn.Name = "correlacion_btn";
-            this.correlacion_btn.Size = new System.Drawing.Size(167, 77);
-            this.correlacion_btn.TabIndex = 4;
-            this.correlacion_btn.Text = "Correlacion";
-            this.correlacion_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.correlacion_btn.UseVisualStyleBackColor = false;
-            this.correlacion_btn.Click += new System.EventHandler(this.correlacion_btn_Click);
-            // 
-            // falsos_predictores_btn
-            // 
-            this.falsos_predictores_btn.BackColor = System.Drawing.Color.White;
-            this.falsos_predictores_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.falsos_predictores_btn.FlatAppearance.BorderSize = 3;
-            this.falsos_predictores_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.falsos_predictores_btn.Image = ((System.Drawing.Image)(resources.GetObject("falsos_predictores_btn.Image")));
-            this.falsos_predictores_btn.Location = new System.Drawing.Point(527, 3);
-            this.falsos_predictores_btn.Name = "falsos_predictores_btn";
-            this.falsos_predictores_btn.Size = new System.Drawing.Size(167, 77);
-            this.falsos_predictores_btn.TabIndex = 5;
-            this.falsos_predictores_btn.Text = "Falsos predictores";
-            this.falsos_predictores_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.falsos_predictores_btn.UseVisualStyleBackColor = false;
-            // 
-            // instancias_totales_lbl
-            // 
-            this.instancias_totales_lbl.AutoSize = true;
-            this.instancias_totales_lbl.Location = new System.Drawing.Point(123, 175);
-            this.instancias_totales_lbl.Name = "instancias_totales_lbl";
-            this.instancias_totales_lbl.Size = new System.Drawing.Size(35, 13);
-            this.instancias_totales_lbl.TabIndex = 13;
-            this.instancias_totales_lbl.Text = "label7";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 175);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(92, 13);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Instancias totales:";
-            // 
-            // borrar_columna_btn
-            // 
-            this.borrar_columna_btn.Location = new System.Drawing.Point(38, 275);
-            this.borrar_columna_btn.Name = "borrar_columna_btn";
-            this.borrar_columna_btn.Size = new System.Drawing.Size(109, 45);
-            this.borrar_columna_btn.TabIndex = 14;
-            this.borrar_columna_btn.Text = "Borrar columna seleccionada";
-            this.borrar_columna_btn.UseVisualStyleBackColor = true;
-            this.borrar_columna_btn.Click += new System.EventHandler(this.borrar_columna_btn_Click);
             // 
             // Form1
             // 

@@ -552,7 +552,7 @@ namespace Proyecto_MineriaDatos
                         }
                     }
                     MessageBox.Show("Los valores seran sustituidos con " + mayor);
-                    sustituirValores(this.indexColumna, 0, mayor);
+                    sustituirValoresFaltantes(this.indexColumna, 0, mayor);
                 }
                 else
                 {
@@ -576,12 +576,12 @@ namespace Proyecto_MineriaDatos
 
                     if (opcion == "media")
                     {
-                        sustituirValores(this.indexColumna, media, "");
+                        sustituirValoresFaltantes(this.indexColumna, media, "");
 
                     }
                     else if (opcion == "mediana")
                     {
-                        sustituirValores(this.indexColumna, mediana, "");
+                        sustituirValoresFaltantes(this.indexColumna, mediana, "");
                     }
                     else
                     {
@@ -635,7 +635,8 @@ namespace Proyecto_MineriaDatos
             return list;
         }
 
-        public void sustituirValores(int index, float valor, string mayorFrecuencia)
+        //sustituye valores faltantes de una columna
+        public void sustituirValoresFaltantes(int index, float valor, string mayorFrecuencia)
         {
             if (mayorFrecuencia != "" )
             {
@@ -648,6 +649,7 @@ namespace Proyecto_MineriaDatos
                         || (string)dataGridView[index, rows].Value == "?")  //value is not null
                     {
                         dataGridView[index, rows].Value = mayorFrecuencia;
+                        dataGridView[index, rows].Style.BackColor = Color.White;
                     }
                 }
             }
@@ -662,6 +664,7 @@ namespace Proyecto_MineriaDatos
                         || (string)dataGridView[index, rows].Value == "?")  //value is not null
                     {
                         dataGridView[index, rows].Value = valor.ToString();
+                        dataGridView[index, rows].Style.BackColor = Color.White;
                     }
                 }
 
@@ -783,9 +786,9 @@ namespace Proyecto_MineriaDatos
 
         private void tipografia_btn_Click(object sender, EventArgs e)
         {
-            if(this.indexColumna == 1)
+            if(this.indexColumna > 0 && this.tipoDeDato[this.indexColumna] == "System.String")
             {
-                
+                int index = this.indexColumna;
                 List<string> columna = columnToListString(this.indexColumna);
                 Dictionary<string, int> frecuencia = new Dictionary<string, int>();
                 foreach (string elemento in columna)
@@ -808,12 +811,34 @@ namespace Proyecto_MineriaDatos
                         posibleErrorTipografico.Add(value);
                     }
                 }
-
                 //falta buscar valores fuera del rango
-
                 using (Tipografia frm = new Tipografia(posibleErrorTipografico, datosBase))
                 {
-
+                    var result = frm.ShowDialog();
+                    
+                    if (result == DialogResult.OK || result == DialogResult.Cancel)
+                    {
+                        //extraemos los datos que se van a querer modificar
+                        List<List<string>> respuesta = frm.getRespuesta();
+                        //si la lista esta vacia no se entra
+                        if (respuesta.Count > 0)
+                        {
+                            //se iteran todos los elementos
+                            for (int i = 0; i < dataGridView.Rows.Count; i++)
+                            {
+                                //se itera sobre las listas que hay que modificar
+                                foreach (List<string> lista in respuesta)
+                                {
+                                    //si el elemento de la grid es igual a la palabra se sustituye por 
+                                    //el valor recomendado
+                                    if (lista[1] == (string)dataGridView[index, i].Value)
+                                    {
+                                        dataGridView[index, i].Value = lista[0];
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -821,6 +846,7 @@ namespace Proyecto_MineriaDatos
         private void borrar_columna_btn_Click(object sender, EventArgs e)
         {
             dataGridView.Columns.RemoveAt(this.indexColumna);
+            this.tipoDeDato.RemoveAt(this.indexColumna);
         }
 
         private void correlacion_btn_Click(object sender, EventArgs e)
@@ -917,6 +943,50 @@ namespace Proyecto_MineriaDatos
                 }
             }
             return columna;
+        }
+
+        private void buscar_remplazar_btn_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.Columns.Count > 0)
+            {
+                bool repetir = true;
+                string buscar, remplazar;
+                while (repetir)
+                {   
+                    
+                    using (Buscar_remplazar frm = new Buscar_remplazar(buscar,remplazar))
+                    {
+                        var showDialog = frm.ShowDialog();
+                        if (showDialog == DialogResult.OK)
+                        {
+                            List<string> resultado = frm.getResult();
+                            //que tenga datos la lista
+                            if (resultado.Count > 0)
+                            {
+                                //remplazar 1
+                                if (resultado[2] == "uno")
+                                {
+                                    
+                                }
+                                //remplazar todos
+                                else if(resultado[2] == "todo")
+                                {
+
+                                }
+                                //buscar solamente
+                                else if(resultado[2] == "buscar")
+                                {
+
+                                }
+                            }
+                        }
+                        else if (showDialog == DialogResult.Cancel)
+                        {
+                            repetir = false;
+                        }
+                    }
+                }   
+            }
         }
     }
 }
