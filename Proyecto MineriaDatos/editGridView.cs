@@ -36,5 +36,10 @@ namespace Proyecto_MineriaDatos
             this.columnName = name_tb.Text;
             this.Close();
         }
+
+        private void editGridView_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

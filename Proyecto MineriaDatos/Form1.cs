@@ -139,6 +139,7 @@ namespace Proyecto_MineriaDatos
                         for (int i = 0; i < dt.Columns.Count; i++)
                         {
                             this.tipoDeDato.Add(dt.Columns[i].DataType.ToString());
+                          
                             if (dt.Columns[i].DataType != typeof(string))
                                 dt.Columns[i].DataType = typeof(string);
                         }
@@ -159,7 +160,7 @@ namespace Proyecto_MineriaDatos
         /// <param name="fileName">el nombre del archivo que vamos a sobreescribir</param>
         public void guardarArchivo(string fileName)
         {
-            //revisa si tiene datos el datagridview, si no tiene se 
+            //revisa si tiene datos el datagridview, si no tiene se  cancela
             if (dataGridView.Rows.Count == 0)
             {
                 MessageBox.Show("No hay informacion que guardar");
@@ -168,9 +169,7 @@ namespace Proyecto_MineriaDatos
             {
                 DataTable dt = (DataTable)(dataGridView.DataSource); //extraer la informacion del data grid view
                 StringBuilder sb = new StringBuilder();
-                //al guardar como hay error
-
-
+            
                 IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().
                                                   Select(column => column.ColumnName);
                 sb.AppendLine(string.Join(",", columnNames));
@@ -246,6 +245,7 @@ namespace Proyecto_MineriaDatos
         {
 
         }
+
         private void filesToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -416,6 +416,18 @@ namespace Proyecto_MineriaDatos
                             missingValues += 1;
                         }
                         break;
+                    case "System.DateTime":
+                        tipoDeDato2 = "DateTime";
+                        //revisa si la celda tiene asignado un valor, si no lo tiene
+                        //entonces se le asigna un ? y se sube el contador
+                        if (dataGridView[e.ColumnIndex, rows].Value == null
+                     || dataGridView[e.ColumnIndex, rows].Value == DBNull.Value
+                     || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
+                        {
+                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            missingValues += 1;
+                        }
+                        break;
                 }
 
             }
@@ -444,7 +456,7 @@ namespace Proyecto_MineriaDatos
                 //creamos una lista donde meteremos toda 1 columna
                 List<float> list = new List<float>();
                 //No tomamos en cuenta las columnas tipo string
-                if (tipoDeDato != "System.String")
+                if (tipoDeDato != "System.String" && tipoDeDato != "System.DateTime")
                 {
                     //iteramos sobre toda 1 columna
                     for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
@@ -677,7 +689,8 @@ namespace Proyecto_MineriaDatos
         //sacar outliers
         private void outliers_btn_Click(object sender, EventArgs e)
         {
-            if (dataGridView.Columns.Count > 0 && dataGridView.Rows.Count > 0)
+            if (dataGridView.Columns.Count > 0 && dataGridView.Rows.Count > 0 
+                && this.tipoDeDato[this.indexColumna] != "System.String")
             {
                 bool sustituir = false;
                 bool sustituir_iqr5 = false;
@@ -778,7 +791,7 @@ namespace Proyecto_MineriaDatos
             }
             else
             {
-                MessageBox.Show("No hay datos");
+                MessageBox.Show("No hay outliers o el tipo de dato no puede calcularse");
             }
            
 
@@ -1106,6 +1119,109 @@ namespace Proyecto_MineriaDatos
                     }
                 }   
             }
+        }
+
+        private void muestreo_btn_Click(object sender, EventArgs e)
+        {
+            int instanciasTotales = Int32.Parse(instancias_totales_lbl.Text);
+            //llamamos form
+            using (Muestreo frm = new Muestreo(instanciasTotales))
+            {
+                //si todo salio bien entonces entramos a guardar el archivo
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    //guardamos el archivo
+                    using (SaveFileDialog ofd = new SaveFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
+                    {
+                        //si el nombre del archivo se escribió
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            //hacer dt
+                            DataTable dataT =  new DataTable();
+                            int opc = frm.getOpc();
+                            int instancias = frm.getInstancias();
+
+                            //extraer la informacion dependiendo de la opcion seleccionada
+                            //con remplazo
+                            if (opc == 0)
+                            {
+
+                                //agregar headers a datatable
+                                for (int i = 0; i < dataGridView.Columns.Count; i++)
+                                {
+                                    dataT.Columns.Add(dataGridView.Columns[i].HeaderText);
+                                }
+
+                                //crear una row para nuestro datatable
+
+                                //agregar el numero de instancias que puso el usuario
+                                //a nuestro dt
+
+                                Random rnd = new Random();
+
+                                for (int i = 0; i < instancias; i++)
+                                {
+                                    
+                                    int randomIndex = rnd.Next(instanciasTotales);
+                                    DataRow dr = null;
+                                    dr = dataT.NewRow(); // crear una nueva row
+                                    dr = ((DataRowView)(dataGridView.Rows[randomIndex].DataBoundItem)).Row;
+                                    dataT.Rows.Add(dr.ItemArray);
+                                    //dataT.ImportRow(dr);
+                                    dr = null;
+                                }
+                            }
+                            //sin remplazo
+                            else if (opc == 1)
+                            {
+                                //agregar headers a datatable
+                                for (int i = 0; i < dataGridView.Columns.Count; i++)
+                                {
+                                    dataT.Columns.Add(dataGridView.Columns[i].HeaderText);
+                                }
+                                //crear una row para nuestro datatable
+
+                                //agregar el numero de instancias que puso el usuario
+                                //a nuestro dt
+                                Random rnd = new Random();
+
+                                List<int> usados = new List<int>();
+                                //es pesado para la compu
+                                while(instancias > dataT.Rows.Count){
+                                    DataRow dr = null;
+                                    int randomIndex = rnd.Next(instanciasTotales);
+                                    if (!usados.Contains(randomIndex))
+                                    {
+                                        dr = dataT.NewRow(); // crear una nueva row
+                                        dr = ((DataRowView)(dataGridView.Rows[randomIndex].DataBoundItem)).Row;
+                                        dataT.Rows.Add(dr.ItemArray);
+                                        //dataT.ImportRow(dr);
+
+                                        usados.Add(randomIndex);
+                                    }
+                                }
+                            
+                            }
+
+                            //guardar archivo
+                            StringBuilder sb = new StringBuilder();
+
+                            IEnumerable<string> columnNames = dataT.Columns.Cast<DataColumn>().
+                                                              Select(column => column.ColumnName);
+                            sb.AppendLine(string.Join(",", columnNames));
+
+                            foreach (DataRow row in dataT.Rows)
+                            {
+                                IEnumerable<string> fields = row.ItemArray.Select(field => field.ToString());
+                                sb.AppendLine(string.Join(",", fields));
+                            }
+
+                            File.WriteAllText(ofd.FileName, sb.ToString());
+                        }
+
+                    }
+                }
+            }    
         }
     }
 }

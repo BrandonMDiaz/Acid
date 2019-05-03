@@ -28,57 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label9 = new System.Windows.Forms.Label();
-            this.clases_cb = new System.Windows.Forms.ComboBox();
+            this.clases_lbox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
-            this.chart1.Location = new System.Drawing.Point(251, 2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.Dock = System.Windows.Forms.DockStyle.Right;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(364, 0);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            series3.YValuesPerPoint = 6;
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(547, 436);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.YValuesPerPoint = 6;
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(622, 550);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 27);
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(8, 29);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(99, 13);
+            this.label9.Size = new System.Drawing.Size(144, 20);
             this.label9.TabIndex = 20;
             this.label9.Text = "Selecciona la clase";
             // 
-            // clases_cb
+            // clases_lbox
             // 
-            this.clases_cb.FormattingEnabled = true;
-            this.clases_cb.Location = new System.Drawing.Point(12, 52);
-            this.clases_cb.Name = "clases_cb";
-            this.clases_cb.Size = new System.Drawing.Size(121, 21);
-            this.clases_cb.TabIndex = 19;
-            this.clases_cb.SelectedIndexChanged += new System.EventHandler(this.clases_cb_SelectedIndexChanged);
+            this.clases_lbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clases_lbox.FormattingEnabled = true;
+            this.clases_lbox.ItemHeight = 15;
+            this.clases_lbox.Location = new System.Drawing.Point(12, 64);
+            this.clases_lbox.Name = "clases_lbox";
+            this.clases_lbox.Size = new System.Drawing.Size(195, 124);
+            this.clases_lbox.TabIndex = 21;
+            this.clases_lbox.SelectedIndexChanged += new System.EventHandler(this.clases_lbox_SelectedIndexChanged);
             // 
             // Frecuencia
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(986, 550);
+            this.Controls.Add(this.clases_lbox);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.clases_cb);
             this.Controls.Add(this.chart1);
             this.Name = "Frecuencia";
             this.Text = "Frecuencia";
@@ -92,6 +96,6 @@
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox clases_cb;
+        private System.Windows.Forms.ListBox clases_lbox;
     }
 }

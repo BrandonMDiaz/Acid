@@ -278,6 +278,7 @@
             this.button8.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
             this.button8.FlatAppearance.BorderSize = 3;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
             this.button8.Location = new System.Drawing.Point(881, 6);
             this.button8.Name = "button8";
@@ -306,6 +307,7 @@
             this.muestreo_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.muestreo_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.muestreo_btn.UseVisualStyleBackColor = false;
+            this.muestreo_btn.Click += new System.EventHandler(this.muestreo_btn_Click);
             // 
             // tipografia_btn
             // 
@@ -551,7 +553,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(34)))), ((int)(((byte)(57)))));
-            this.ClientSize = new System.Drawing.Size(1097, 561);
+            this.ClientSize = new System.Drawing.Size(1094, 561);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.atributos_data);
             this.Controls.Add(this.dataGridView);

@@ -25,7 +25,14 @@ namespace Proyecto_MineriaDatos
             this.nombreColumnas = nombres;
             foreach (var nombre in this.nombreColumnas)
             {
-                clases_cb.Items.Add(nombre);
+                clases_lbox.Items.Add(nombre);
+            }
+            chart1.Size = new Size(750, 750);
+
+            if (nombres.Count > 0)
+            {
+                clases_lbox.SelectedIndex = 0;
+                this.frecuencia(0);
             }
         }
         private void frecuencia(int index)
@@ -48,10 +55,10 @@ namespace Proyecto_MineriaDatos
             }
 
         }
-        private void clases_cb_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void clases_lbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = (int)clases_cb.SelectedIndex;
-            this.frecuencia(index);
+            this.frecuencia(clases_lbox.SelectedIndex);
         }
     }
 }

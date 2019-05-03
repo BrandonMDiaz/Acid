@@ -71,5 +71,10 @@ namespace Proyecto_MineriaDatos
 
             }
         }
+
+        private void tipo_cb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

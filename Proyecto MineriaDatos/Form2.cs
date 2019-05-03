@@ -19,8 +19,6 @@ namespace Proyecto_MineriaDatos
         //Nombre de cada columna
         List<string> nombreColumnas;
 
-        float mediana;
-
         //constructor
         public Form2(int instancias, List<List<float>> listaFlotantes,
             List<string> nombres)
@@ -31,7 +29,12 @@ namespace Proyecto_MineriaDatos
             this.nombreColumnas = nombres;
             foreach (var nombre in this.nombreColumnas)
             {
-                clases_cb.Items.Add(nombre);
+                clases_lb.Items.Add(nombre);
+            }
+            if (nombres.Count > 0)
+            {
+                clases_lb.SelectedIndex = 0;
+                this.boxPlot(0);
             }
             //chart1.Series.Add;
         }
@@ -134,9 +137,7 @@ namespace Proyecto_MineriaDatos
         //se seleccione otra clase en el combo box
         private void clases_cb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = (int)clases_cb.SelectedIndex;  
-            string nombre = (string)clases_cb.SelectedItem;
-            this.boxPlot(index);
+           
         }
 
         static public List<List<float>> outliers(List<float> columna)
@@ -196,6 +197,13 @@ namespace Proyecto_MineriaDatos
         
             return outliersLista;
 
+        }
+
+        private void clases_lb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int index = (int)clases_lb.SelectedIndex;
+            string nombre = (string)clases_lb.SelectedItem;
+            this.boxPlot(index);
         }
     }
 }
