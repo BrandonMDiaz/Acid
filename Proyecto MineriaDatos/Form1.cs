@@ -843,6 +843,7 @@ namespace Proyecto_MineriaDatos
             }
         }
 
+        //funcion que borra una columna
         private void borrar_columna_btn_Click(object sender, EventArgs e)
         {
             dataGridView.Columns.RemoveAt(this.indexColumna);
@@ -851,10 +852,10 @@ namespace Proyecto_MineriaDatos
 
         private void correlacion_btn_Click(object sender, EventArgs e)
         {
-
+            chiCuadrada(1,5);
         }
-       
-        public void pearson(int index1, int index2)
+       //funcion para calcular el coeficiente de pearson
+        public float pearson(int index1, int index2)
         {
             //se busca que se comparen numericos con numericos 
             if (tipoDeDato[index1] == tipoDeDato[index2] 
@@ -881,7 +882,11 @@ namespace Proyecto_MineriaDatos
                     sumatoria += (columna1[i] - media1) * (columna2[i] - media2);
                 }
                 float abajo = desviacionEstandar1 * desviacionEstandar2 * (dataGridView.Rows.Count - 1);
-         
+                return abajo;
+            }
+            else
+            {
+                return -3;
             }
         }
 
@@ -889,18 +894,92 @@ namespace Proyecto_MineriaDatos
         {
             //se trabaja con los valores categoricos
             if (this.tipoDeDato[index1] == this.tipoDeDato[index2]
-                && this.tipoDeDato[index1] == "string") 
+                && this.tipoDeDato[index1] == "System.String")
             {
-                //sacar frecuencia de 1 columna
-                //List<string> columna = listaStrings[index];
-                Dictionary<string, int> frecuencia = new Dictionary<string, int>();
-                //foreach (string elemento in columna)
-                //{
-                    //if (!frecuencia.ContainsKey(elemento))
-                        //frecuencia.Add(elemento, 1);
-                    //else
-                        //frecuencia[elemento]++;
-                //}
+                List<string> datosBase1 = new List<string>();
+                List<string> datosBase2 = new List<string>();
+                List<List<int>> tablaContingencia = new List<List<int>>();
+                //inicializar tablaDeContingencia
+                //sacar datos base de columnas
+                for (int row = 0; row < dataGridView.Rows.Count - 1; row++)
+                {
+                    //datos base
+                    if (!datosBase1.Contains((string)dataGridView[index1, row].Value))
+                    {
+                        datosBase1.Add((string)dataGridView[index1, row].Value);
+                    }
+                    if (!datosBase2.Contains((string)dataGridView[index2, row].Value))
+                    {
+                        datosBase2.Add((string)dataGridView[index2, row].Value);
+                    }
+                }
+                
+                for (int i = 0; i < datosBase1.Count; i++)
+                {
+                    List<int> lista = new List<int>();
+                    for (int x = 0; x < datosBase2.Count; x++)
+                    {
+                        lista.Add(0);
+                    }
+                    tablaContingencia.Add(lista);
+
+                }
+                //calcular tabla de contingencia
+                for (int row = 0; row < dataGridView.Rows.Count - 1; row++)
+                {
+                    string dato1 = (string)dataGridView[index1, row].Value;
+                    string dato2 = (string)dataGridView[index2, row].Value;
+
+                    int indexOf1 = datosBase1.IndexOf(dato1);
+                    int indexOf2 = datosBase2.IndexOf(dato2);
+                    int i1 = indexOf1;
+                    int i2 = indexOf2;
+
+                    tablaContingencia[i1][i2]++;
+                }
+
+                //sacar total por fila y columna
+                List<double> sumaFilas = new List<double>();
+                List<double> sumaColumnas = new List<double>();
+
+                //suma por filas
+                for (int i = 0; i < datosBase1.Count; i++)
+                {
+                    sumaFilas.Add(tablaContingencia[i].Sum());
+                }
+                //suma por columnas      
+                for (int i = 0; i < datosBase2.Count; i++)
+                {
+                    double temp = 0;
+                    for (int x = 0; x < datosBase1.Count; x++)
+                    {
+                        temp += tablaContingencia[x][i];
+                    }
+                    sumaColumnas.Add(temp);
+                }
+                double totalValores = sumaFilas.Sum();
+
+                //sacamos chi cuadrada de madrazo
+  
+                double chicuadrada = 0;
+                for(int i = 0; i < datosBase1.Count - 1; i++)
+                {
+                    for (int x = 0; x < datosBase2.Count -1; x++)
+                    {
+                        double frecuenciaEsperada = ((sumaFilas[i] * sumaColumnas[x])
+                                                    / totalValores);
+                        double valor = tablaContingencia[i][x];
+                        double valorCuadrado = (valor - frecuenciaEsperada) * (valor - frecuenciaEsperada);
+                        chicuadrada += 
+                           (valorCuadrado
+                            / frecuenciaEsperada);
+                    }
+                }
+                double tschuprow = Math.Sqrt(
+                    chicuadrada/
+                    (totalValores * 
+                    Math.Sqrt( (datosBase1.Count - 1) * (datosBase2.Count -1)) )   );
+                MessageBox.Show(tschuprow.ToString());
             }
         }
 
