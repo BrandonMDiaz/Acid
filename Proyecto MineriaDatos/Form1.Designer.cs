@@ -42,7 +42,7 @@
             this.frecuencia_btn = new System.Windows.Forms.Button();
             this.box_plot_btn = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button8 = new System.Windows.Forms.Button();
+            this.normalizacion_btn = new System.Windows.Forms.Button();
             this.muestreo_btn = new System.Windows.Forms.Button();
             this.tipografia_btn = new System.Windows.Forms.Button();
             this.buscar_remplazar_btn = new System.Windows.Forms.Button();
@@ -259,7 +259,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
-            this.tabPage3.Controls.Add(this.button8);
+            this.tabPage3.Controls.Add(this.normalizacion_btn);
             this.tabPage3.Controls.Add(this.muestreo_btn);
             this.tabPage3.Controls.Add(this.tipografia_btn);
             this.tabPage3.Controls.Add(this.buscar_remplazar_btn);
@@ -271,24 +271,25 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Limpieza de datos";
             // 
-            // button8
+            // normalizacion_btn
             // 
-            this.button8.BackColor = System.Drawing.Color.White;
-            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button8.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
-            this.button8.FlatAppearance.BorderSize = 3;
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.Location = new System.Drawing.Point(881, 6);
-            this.button8.Name = "button8";
-            this.button8.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button8.Size = new System.Drawing.Size(169, 77);
-            this.button8.TabIndex = 8;
-            this.button8.Text = "Normalizacion";
-            this.button8.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button8.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button8.UseVisualStyleBackColor = false;
+            this.normalizacion_btn.BackColor = System.Drawing.Color.White;
+            this.normalizacion_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.normalizacion_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.normalizacion_btn.FlatAppearance.BorderSize = 3;
+            this.normalizacion_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.normalizacion_btn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.normalizacion_btn.Image = ((System.Drawing.Image)(resources.GetObject("normalizacion_btn.Image")));
+            this.normalizacion_btn.Location = new System.Drawing.Point(881, 6);
+            this.normalizacion_btn.Name = "normalizacion_btn";
+            this.normalizacion_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.normalizacion_btn.Size = new System.Drawing.Size(169, 77);
+            this.normalizacion_btn.TabIndex = 8;
+            this.normalizacion_btn.Text = "Normalizacion";
+            this.normalizacion_btn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.normalizacion_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.normalizacion_btn.UseVisualStyleBackColor = false;
+            this.normalizacion_btn.Click += new System.EventHandler(this.normalizacion_btn_Click);
             // 
             // muestreo_btn
             // 
@@ -604,7 +605,7 @@
         private System.Windows.Forms.Label tipo_dato_lbl;
         private System.Windows.Forms.Label proporcion_lbl;
         private System.Windows.Forms.Label valores_faltantes_lbl;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button normalizacion_btn;
         private System.Windows.Forms.Button muestreo_btn;
         private System.Windows.Forms.Button tipografia_btn;
         private System.Windows.Forms.Button buscar_remplazar_btn;

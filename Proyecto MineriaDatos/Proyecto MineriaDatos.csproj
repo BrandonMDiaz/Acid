@@ -96,6 +96,12 @@
     <Compile Include="Muestreo.Designer.cs">
       <DependentUpon>Muestreo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Normalizar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Normalizar.Designer.cs">
+      <DependentUpon>Normalizar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Outliers.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Muestreo.resx">
       <DependentUpon>Muestreo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Normalizar.resx">
+      <DependentUpon>Normalizar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Outliers.resx">
       <DependentUpon>Outliers.cs</DependentUpon>

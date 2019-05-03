@@ -1223,5 +1223,103 @@ namespace Proyecto_MineriaDatos
                 }
             }    
         }
+
+        private void normalizacion_btn_Click(object sender, EventArgs e)
+        {
+            int opc = 0;
+            int index = this.indexColumna;
+            List<double> lista = columnToListFloat(index);
+            double min = lista.Min();
+            double max = lista.Max();
+            double media = Form2.medianaFunc(lista);
+            double desviacionE = Form2.desviacionEstandarFunc(lista,media);
+            double desviacionM = this.desviacionMedia(lista, media);
+            switch (opc)
+            {
+                case 0:
+                    minMax(min,max,   ,index);
+                    break;
+                case 1:
+                    zScoreDesviacionEstandar(media,desviacionE,index);
+                    break;
+                case 2:
+                    zScoreDesviacionMedia(media,desviacionM,index);
+                    break;
+            }
+        }
+        public void minMax(double min, double max,
+            double nuevoMin, double nuevoMax, int index)
+        {
+            //iteramos todas las filas
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (dataGridView[index, i] != null
+                    && dataGridView[index, i].Value != DBNull.Value
+                    && (string)dataGridView[index, i].Value != ""
+                    && (string)dataGridView[index, i].Value != "?")
+                {
+                    //hacemos dato de grid double
+                    double value = Double.Parse((string)dataGridView[index, i].Value);
+                    //calculamos min max
+                    double minmax = ((value - min) /
+                        (max - min)) * (nuevoMax - nuevoMin) + nuevoMin;
+                    //lo agregamos al datagridview
+                    dataGridView[index, i].Value = minmax.ToString();
+                }
+            }
+        }
+        public void zScoreDesviacionEstandar(double media,
+            double desviacionE, int index)
+        {
+            //se tiene que calcular media y 
+            //iteramos todas las filas
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (dataGridView[index, i] != null
+                    && dataGridView[index, i].Value != DBNull.Value
+                    && (string)dataGridView[index, i].Value != ""
+                    && (string)dataGridView[index, i].Value != "?")
+                {
+                    //transformamos el dato de nuestro grid a double
+                    double value = Double.Parse((string)dataGridView[index, i].Value);
+                    //calculamos zscore
+                    double zscore = (value - media) /
+                        desviacionE;
+                    //lo agregamos al datagridview
+                    dataGridView[index, i].Value = zscore.ToString();
+                }
+            }
+        }
+        public void zScoreDesviacionMedia(double media,
+            double desviacionMedia, int index)
+        {
+            //iteramos todas las filas
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (dataGridView[index, i] != null
+                    && dataGridView[index, i].Value != DBNull.Value
+                    && (string)dataGridView[index, i].Value != ""
+                    && (string)dataGridView[index, i].Value != "?")
+                {
+                    //transformamos el dato de nuestro grid a double
+                    double value = Double.Parse((string)dataGridView[index, i].Value);
+                    //calculamos zscore
+                    double zscore = (value - media) /
+                        desviacionMedia;
+                    //lo agregamos al datagridview
+                    dataGridView[index, i].Value = zscore.ToString();
+                }
+            }
+        }
+
+        public double desviacionMedia(List<double> lista, double media)
+        {
+            double acumulador = 0;
+            foreach (double value in lista)
+            {
+                acumulador += Math.Abs(value - media);
+            }
+            return (1 / lista.Count) * acumulador;
+        }
     }
 }
