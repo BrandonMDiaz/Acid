@@ -17,16 +17,24 @@ namespace Proyecto_MineriaDatos
     {
         //guarda el nombre del archivo abierto
         string fileName;
-
-        //guarda el dominio por columna
-        Dictionary<string, string> dominio =
-          new Dictionary<string, string>();
-
+        //guardar informacion del archivo
+        string infoData = "";
+        //como se representaran los valores faltantes
+        string valorFaltante = "";
+        //guarda el dominio 
+        List<string> dominio = new List<string>();
         //guarda el tipo de dato por columna
+        //(numérico, nominal, ordinal, boleano,
+        //fecha).
+        //nominal = categorico
+        //ordinal = categorico
         List<string> tipoDeDato = new List<string>();
+        //atributos
+        List<string> atributos = new List<string>();
+
 
         //guarda la columna seleccionada actualmente
-        int indexColumna = 0;
+        int indexColumna = -1;
         int valoresFaltantes = 0;
 
         public Form1()
@@ -38,86 +46,165 @@ namespace Proyecto_MineriaDatos
         public DataTable LeerData(string fileName)
         {
             this.fileName = fileName;
+            //DataTable dt = new DataTable("Data");
             DataTable dt = new DataTable("Data");
 
             //informacion general
             //descripcion de la base de datos
             //base de datos
-            using (var reader = new StreamReader(Path.GetDirectoryName(fileName)))
+            string path = Path.GetDirectoryName(fileName);
+
+            using (StreamReader reader = new StreamReader(fileName))
             {
+                this.tipoDeDato.Clear();
+
                 List<string> listA = new List<string>();
                 List<string> listB = new List<string>();
                 //parte en la que se encuentra el archivo
                 // 0 = informacion general
                 // 1 = descripcion de la base de datos
                 // 2 = base de datos
-                int partes = 0;
-                string linea = "";
-                string letra = "";
-                string palabra = "";
-                //leemos el primer caracter
-                letra = reader.Read().ToString();
-                //si el primer caracter es el de la parte uno entonces se especifica
-                if (letra == "%" && reader.Peek().ToString() == "%" || letra == "%")
+
+                string info = "";
+                string relation; //nombre del dataset
+                List<string> attribute = new List<string>(); //datos en el dataset
+                string missingValue; //valor faltante
+                
+                //leemos hasta llegar a donde esta la informacion
+                while (!reader.EndOfStream)
                 {
-                    partes = 0;
+                    string newLine = "";
+                    newLine = reader.ReadLine();
+                    if (newLine.Contains("@data"))
+                    {
+                        break;
+                    }
+                    else if (newLine.Contains("%%"))
+                    {
+                        //newLine.Remove(newLine.First());
+                        //newLine.Remove(newLine.First());
+                        info += newLine;
+                    }
+                    else if (newLine.Contains("@relation"))
+                    {
+                        string[] split = newLine.Split(null);
+                        relation = split[1];
+                    }
+                    else if (newLine.Contains("@attribute"))
+                    {
+                        attribute.Add(newLine);
+                    }
+                    else if (newLine.Contains("@missingValue"))
+                    {
+
+                        //separamos la string donde esté un espacio
+                        string[] split = newLine.Split(null);
+                        //guardamos el valor que se usara para indicar
+                        //valores faltantes
+                        missingValue = split[1];
+                    }
                 }
-                //si el primer caracter es el de la parte dos se especifica
-                else if (letra == "@")
+
+                List<string> atributos = new List<string>();
+                List<string> tipoDeDato = new List<string>();
+                List<string> dominio = new List<string>();
+
+                //tomamos los atributos del dataset
+                foreach (var data in attribute)
                 {
-                    partes = 1;
+                    string[] split = data.Split(null);
+                    atributos.Add(split[1]);
+
+                    tipoDeDato.Add(split[2]);
+                    string dominioTotal = "";
+                    for (int i = 3; i < split.Count(); i++)
+                    {
+                        dominioTotal += split[i];
+                    }
                 }
-                //si el primer caracter no es ninguno de los anteriores se especifica
-                else
+
+                this.tipoDeDato = tipoDeDato;
+                this.dominio = dominio;
+                this.atributos = atributos;
+                this.infoData = info;
+                //
+                //
+                //agregar informacion al dt
+
+                //agregamos header al dt
+                foreach (var dato in atributos)
                 {
-                    partes = 2;
+                    dt.Columns.Add(dato);
                 }
-                //para poder entrar aqui tenemos que estar en etapa 0 o 1
-                if(partes < 2) {
+                
+                while (!reader.EndOfStream)
+                {
+                    string newLine = "";
+                    newLine = reader.ReadLine();
+                    List<string> row = newLine.Split(',').ToList<string>();
+
+                    dt.Rows.Add(row.ToArray());
+                }
+
+                return dt;
+                //
+                //
+                //
+
+                // Escribimos toda la informacion resultante a un csv
+                string pathFile = path + "aux.csv";
+
+
+                //agregamos informacion a un nuevo archivo que será leido
+                using (var tw = new StreamWriter(pathFile, true))
+                {
+                    string lineaConHeaders = "";
+
+                    //juntamos los nombres de las columnas separados por ,
+                    foreach (var dato in atributos)
+                    {
+                        dt.Columns.Add(dato);
+                        lineaConHeaders += dato + ",";
+                    }
+                    //remover ultima coma :)
+                    lineaConHeaders = lineaConHeaders.Remove(lineaConHeaders.Length - 1);
                     while (!reader.EndOfStream)
                     {
-                        //leemos letra por letra
-                        letra = reader.Read().ToString();
-                        if (letra != "")
-                        {
-                            palabra += letra;
-                        }
-                        else
-                        {
-                            palabra = "";
-                        }
+                        string newLine = "";
+                        newLine = reader.ReadLine();
+                        tw.WriteLine(newLine);
+                        dt.Rows.Add(atributos.ToArray());
+                    }
+                }
 
-                        if (letra == "@")
+                //leer archivo csv que cree
+                using (OleDbConnection cn = new OleDbConnection("Provider= Microsoft.jet.OLEDB.4.0;Data Source=\"" +
+                    Path.GetDirectoryName(pathFile) + "\";Extended Properties= 'text;HDR=yes;FMT= Delimited(,)';"))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(string.Format("select * from [{0}]", new FileInfo(pathFile).Name), cn))
+                    {
+                        cn.Open();
+                        using (OleDbDataAdapter adapter = new OleDbDataAdapter(cmd))
                         {
-                            partes = 2;
-                        }
-                        else if (palabra == "@data")
-                        {
+                            //agregamos header a la dt
+                            for (int i = 0; i < atributos.Count; i++)
+                            {
+                                dt.Columns.Add(atributos[i]);
+                            }
+                            adapter.FillSchema(dt, SchemaType.Source);
+                            for (int i = 0; i < dt.Columns.Count; i++)
+                            {
+                                this.tipoDeDato.Add(dt.Columns[i].DataType.ToString());
 
-                        }
-                        linea += letra;
-
-                        if (partes == 0)
-                        {
-                            
-                        }
-                        else if (partes == 1)
-                        {
-
-                        }
-                        else if (partes == 2)
-                        {
-
-                        }
-                        else
-                        {
-                            break;
+                                if (dt.Columns[i].DataType != typeof(string))
+                                    dt.Columns[i].DataType = typeof(string);
+                            }
+                            adapter.Fill(dt);
                         }
                     }
                 }
-                
+                File.Delete(pathFile);
             }
-            
             return dt;
         }
 
@@ -191,11 +278,18 @@ namespace Proyecto_MineriaDatos
 
             try
             {
-                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv", ValidateNames = true, Multiselect = false })
+                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv|DATA|*.data", ValidateNames = true, Multiselect = false })
                 {
                     if (ofd.ShowDialog() == DialogResult.OK) {
                         //cargar datos al datagridview
-                        dataGridView.DataSource = LeerCSV(ofd.FileName);
+                        if (Path.GetExtension(ofd.FileName) == ".data")
+                        {
+                            dataGridView.DataSource = LeerData(ofd.FileName);
+                        }
+                        else
+                        {
+                            dataGridView.DataSource = LeerCSV(ofd.FileName);              
+                        }
                         instancias_totales_lbl.Text = (dataGridView.Rows.Count - 1).ToString();
                         //desactivar el ordenar
                         foreach (DataGridViewColumn column in dataGridView.Columns)
@@ -214,10 +308,11 @@ namespace Proyecto_MineriaDatos
                                 {
                                     dataGridView[column, rows].Value = "?";
                                     dataGridView[column, rows].Style.BackColor = Color.Red;
-                                    
+
                                 }
                             }
                         }
+
 
                     }
                 }
@@ -363,6 +458,7 @@ namespace Proyecto_MineriaDatos
             //faltantes y mas informacion.
             for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
             {
+
                 //revisamos que tipo de dato es la columna columna
                 switch (tipoDeDato)
                 {
@@ -375,7 +471,14 @@ namespace Proyecto_MineriaDatos
                      || String.IsNullOrWhiteSpace((string)dataGridView[e.ColumnIndex, rows].Value)
                      || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
                         {
-                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
                             missingValues += 1;
                         }
                         break;
@@ -388,7 +491,14 @@ namespace Proyecto_MineriaDatos
                      || String.IsNullOrWhiteSpace((string)dataGridView[e.ColumnIndex, rows].Value)
                      || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
                         {
-                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
                             missingValues += 1;
                         }
                         break;
@@ -400,7 +510,14 @@ namespace Proyecto_MineriaDatos
                      || dataGridView[e.ColumnIndex, rows].Value == DBNull.Value
                      || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
                         {
-                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
                             missingValues += 1;
                         }
                         break;
@@ -412,7 +529,14 @@ namespace Proyecto_MineriaDatos
                      || dataGridView[e.ColumnIndex, rows].Value == DBNull.Value
                      || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
                         {
-                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
                             missingValues += 1;
                         }
                         break;
@@ -424,7 +548,33 @@ namespace Proyecto_MineriaDatos
                      || dataGridView[e.ColumnIndex, rows].Value == DBNull.Value
                      || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
                         {
-                            dataGridView[e.ColumnIndex, rows].Value = "?";
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
+                            missingValues += 1;
+                        }
+                        break;
+                    default:
+                        tipoDeDato2 = tipoDeDato;
+                        if (dataGridView[e.ColumnIndex, rows].Value == null
+                     || dataGridView[e.ColumnIndex, rows].Value == DBNull.Value
+                     || (string)dataGridView[e.ColumnIndex, rows].Value == "?")
+                        {
+                            
+                            if (this.valorFaltante != "")
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = this.valorFaltante;
+                            }
+                            else
+                            {
+                                dataGridView[e.ColumnIndex, rows].Value = "?";
+                            }
+
                             missingValues += 1;
                         }
                         break;
@@ -443,7 +593,7 @@ namespace Proyecto_MineriaDatos
             //creamos listas para los valores numericos enteros y flotantes
             //esto para poder pasarselos a la form de boxplot
             //List<List<int>> numericosEnteros = new List<List<int>>();
-            List<List<float>> numericosFlotantes = new List<List<float>>();
+            List<List<double>> numericosFlotantes = new List<List<double>>();
             int totalInstancias = dataGridView.Rows.Count - 1;
             List<string> nombresColumnas = new List<string>();
 
@@ -454,9 +604,11 @@ namespace Proyecto_MineriaDatos
                 //obtenemos el tipo de dato de la columna
                 string tipoDeDato = this.tipoDeDato[column];
                 //creamos una lista donde meteremos toda 1 columna
-                List<float> list = new List<float>();
+                List<double> list = new List<double>();
                 //No tomamos en cuenta las columnas tipo string
-                if (tipoDeDato != "System.String" && tipoDeDato != "System.DateTime")
+                if (tipoDeDato != "System.String" && tipoDeDato != "System.DateTime"
+                    && tipoDeDato != "categorico" && tipoDeDato != "nominal"
+                    && tipoDeDato != "bool" && tipoDeDato != "ordinal")
                 {
                     //iteramos sobre toda 1 columna
                     for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
@@ -468,7 +620,7 @@ namespace Proyecto_MineriaDatos
                             && (string)dataGridView[column, rows].Value != "?")  //value is not null
                         {
                             //vamos agregando las celdas a la lista
-                            list.Add(float.Parse(dataGridView[column, rows].Value.ToString()));
+                            list.Add(double.Parse(dataGridView[column, rows].Value.ToString()));
                         }
                     }
                     //agregamos la lista que creamos anteriormente a la lista de listas
@@ -502,7 +654,9 @@ namespace Proyecto_MineriaDatos
                 //creamos una lista donde meteremos toda 1 columna
                 List<string> list = new List<string>();
                 //Solo tomamos en cuenta las columnas de string (categoricas)
-                if (tipoDeDato == "System.String")
+                if (tipoDeDato == "System.String" 
+                    || tipoDeDato == "categorico" || tipoDeDato == "nominal"
+                    || tipoDeDato == "bool" || tipoDeDato == "ordinal")
                 {
                     //iteramos sobre toda 1 columna
                     for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
@@ -542,7 +696,8 @@ namespace Proyecto_MineriaDatos
                 //sacamos nombre de la columna 
                 string nombreColumna = dataGridView.Columns[this.indexColumna].Name.ToString();
                 //si es categorico se maneja diferente a si es numerico
-                if (tipoDeDato == "System.String")
+                if (tipoDeDato == "System.String" || tipoDeDato == "categorico" || tipoDeDato == "nominal"
+                    || tipoDeDato == "bool" || tipoDeDato == "ordinal")
                 {
                     //lista donde guardaremos toda la columna que selecciono el usuario
                     List<string> columna = obtenerListaDeColumnaCategoricos(this.indexColumna);
@@ -569,13 +724,13 @@ namespace Proyecto_MineriaDatos
                 else
                 {
                     //lista donde guardaremos toda la columna que selecciono el usuario
-                    List<float> list = obtenerListaDeColumna(this.indexColumna);
+                    List<double> list = obtenerListaDeColumna(this.indexColumna);
                     //ordenamos la lista
                     list.Sort();
                     //sacamos la mediana y la moda
-                    float mediana = Form2.medianaFunc(list);
-                    float moda = Form2.modaFunc(list);
-                    float media = list.Average();
+                    double mediana = Form2.medianaFunc(list);
+                    double moda = Form2.modaFunc(list);
+                    double media = list.Average();
                     //se abre el llenarValores form que esta diseñado para llenar valores de una tabla
                     //con la mediana o con la moda
                     using (LlenarValores frm = new LlenarValores(nombreColumna, media, mediana, moda))
@@ -610,9 +765,9 @@ namespace Proyecto_MineriaDatos
 
         }
 
-        public List<float> obtenerListaDeColumna(int index)
+        public List<double> obtenerListaDeColumna(int index)
         {
-            List<float> list = new List<float>();
+            List<double> list = new List<double>();
             //iteramos sobre toda la columna y agregamos los valores a la lista
             for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
             {
@@ -623,7 +778,7 @@ namespace Proyecto_MineriaDatos
                     && (string)dataGridView[index, rows].Value != "?")  //value is not null
                 {
                     //vamos agregando las celdas a la lista
-                    list.Add(float.Parse(dataGridView[index, rows].Value.ToString()));
+                    list.Add(double.Parse(dataGridView[index, rows].Value.ToString()));
                 }
             }
             return list;
@@ -648,7 +803,7 @@ namespace Proyecto_MineriaDatos
         }
 
         //sustituye valores faltantes de una columna
-        public void sustituirValoresFaltantes(int index, float valor, string mayorFrecuencia)
+        public void sustituirValoresFaltantes(int index, double valor, string mayorFrecuencia)
         {
             if (mayorFrecuencia != "" )
             {
@@ -690,7 +845,11 @@ namespace Proyecto_MineriaDatos
         private void outliers_btn_Click(object sender, EventArgs e)
         {
             if (dataGridView.Columns.Count > 0 && dataGridView.Rows.Count > 0 
-                && this.tipoDeDato[this.indexColumna] != "System.String")
+                && this.tipoDeDato[this.indexColumna] != "System.String"
+                && this.tipoDeDato[this.indexColumna] != "categorico" 
+                && tipoDeDato[this.indexColumna] != "nominal"
+                && this.tipoDeDato[this.indexColumna] != "bool"
+                && this.tipoDeDato[this.indexColumna] != "ordinal")
             {
                 bool sustituir = false;
                 bool sustituir_iqr5 = false;
@@ -701,9 +860,9 @@ namespace Proyecto_MineriaDatos
                 string nombreColumna = dataGridView.Columns[this.indexColumna].Name.ToString();
 
                 //lista donde guardaremos toda la columna que selecciono el usuario
-                List<float> columna = obtenerListaDeColumna(this.indexColumna);
+                List<double> columna = obtenerListaDeColumna(this.indexColumna);
 
-                float media, mediana, moda, valorRecomendado;
+                double media, mediana, moda, valorRecomendado;
                 valorRecomendado = 0;
                 columna.Sort();
                 media = columna.Average();
@@ -731,7 +890,7 @@ namespace Proyecto_MineriaDatos
 
                 }
 
-                List<List<float>> listaDeListas = Form2.outliers(columna);
+                List<List<double>> listaDeListas = Form2.outliers(columna);
                 using (Outliers frm = new Outliers(listaDeListas, nombreColumna,
                     valorRecomendado))
                 {
@@ -757,8 +916,8 @@ namespace Proyecto_MineriaDatos
                                 && (string)dataGridView[this.indexColumna, rows].Value != "?")
                             {
                                 //si contiene el valor entonces se sustituye
-                                if (listaDeListas.ElementAt(0).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString()))
-                                || listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
+                                if (listaDeListas.ElementAt(0).Contains(double.Parse(dataGridView[this.indexColumna, rows].Value.ToString()))
+                                || listaDeListas.ElementAt(1).Contains(double.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
                                 {
                                     dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
                                 }
@@ -780,7 +939,7 @@ namespace Proyecto_MineriaDatos
                                 && (string)dataGridView[this.indexColumna, rows].Value != "?")
                             {
                                 //si el elemento está en la lista de outliers se sustituye
-                                if (listaDeListas.ElementAt(1).Contains(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
+                                if (listaDeListas.ElementAt(1).Contains(double.Parse(dataGridView[this.indexColumna, rows].Value.ToString())))  //value is not null
                                 {
                                     dataGridView[this.indexColumna, rows].Value = valorRecomendado.ToString();
                                 }
@@ -799,7 +958,12 @@ namespace Proyecto_MineriaDatos
 
         private void tipografia_btn_Click(object sender, EventArgs e)
         {
-            if(this.indexColumna > 0 && this.tipoDeDato[this.indexColumna] == "System.String")
+            if((this.indexColumna > 0) && 
+                (this.tipoDeDato[this.indexColumna] == "System.String"
+                || this.tipoDeDato[this.indexColumna] == "categorico"
+                || tipoDeDato[this.indexColumna] == "nominal"
+                || this.tipoDeDato[this.indexColumna] == "bool"
+                || this.tipoDeDato[this.indexColumna] == "ordinal"))
             {
                 int index = this.indexColumna;
                 List<string> columna = columnToListString(this.indexColumna);
@@ -868,33 +1032,33 @@ namespace Proyecto_MineriaDatos
             chiCuadrada(1,5);
         }
        //funcion para calcular el coeficiente de pearson
-        public float pearson(int index1, int index2)
+        public double pearson(int index1, int index2)
         {
             //se busca que se comparen numericos con numericos 
             if (tipoDeDato[index1] == tipoDeDato[index2] 
                 || (tipoDeDato[index1] == "float" && tipoDeDato[index2] == "int")
                 || (tipoDeDato[index1] == "int" && tipoDeDato[index2] == "float") )
             {
-                List<float> columna1 = columnToListFloat(index1);
-                List<float> columna2 = columnToListFloat(index2);
-                
+                List<double> columna1 = columnToListFloat(index1);
+                List<double> columna2 = columnToListFloat(index2);
+
                 //se saca el promedio de las dos listas
-                float media1 = columna1.Average();
-                float media2 = columna2.Average();
+                double media1 = columna1.Average();
+                double media2 = columna2.Average();
 
                 //obtenemos la deviacion estandar
-                float desviacionEstandar1 = Form2.desviacionEstandarFunc(columna1,media1);
-                float desviacionEstandar2 = Form2.desviacionEstandarFunc(columna2, media2);
+                double desviacionEstandar1 = Form2.desviacionEstandarFunc(columna1,media1);
+                double desviacionEstandar2 = Form2.desviacionEstandarFunc(columna2, media2);
 
                 //iteramos todas las instancias de los dos atributos, por cada lista
                 // le restamos al dato la media y el resultado de cada lista se multiplica entre
                 //el otro resultado de la otra lista
-                float sumatoria = 0;
+                double sumatoria = 0;
                 for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
                 {
                     sumatoria += (columna1[i] - media1) * (columna2[i] - media2);
                 }
-                float abajo = desviacionEstandar1 * desviacionEstandar2 * (dataGridView.Rows.Count - 1);
+                double abajo = desviacionEstandar1 * desviacionEstandar2 * (dataGridView.Rows.Count - 1);
                 return abajo;
             }
             else
@@ -907,7 +1071,8 @@ namespace Proyecto_MineriaDatos
         {
             //se trabaja con los valores categoricos
             if (this.tipoDeDato[index1] == this.tipoDeDato[index2]
-                && this.tipoDeDato[index1] == "System.String")
+                && (this.tipoDeDato[index1] == "System.String"
+                || this.tipoDeDato[this.indexColumna] == "categorico"))
             {
                 List<string> datosBase1 = new List<string>();
                 List<string> datosBase2 = new List<string>();
@@ -1001,9 +1166,9 @@ namespace Proyecto_MineriaDatos
         /// </summary>
         /// <param int="index"> index de columna que vamos a hacer lista</param>
         /// <returns></returns>
-        public List<float> columnToListFloat(int index)
+        public List<double> columnToListFloat(int index)
         {
-            List<float> columna = new List<float>();
+            List<double> columna = new List<double>();
             for (int rows = 0; rows < dataGridView.Rows.Count - 1; rows++)
             {
                 //si alguna celda esta vacia o es igual a "?" no la tomamos en cuenta
@@ -1013,7 +1178,7 @@ namespace Proyecto_MineriaDatos
                     && (string)dataGridView[index, rows].Value != "?")
                 {
                     //agregamos el valor a la lista 
-                    columna.Add(float.Parse(dataGridView[this.indexColumna, rows].Value.ToString()));
+                    columna.Add(double.Parse(dataGridView[this.indexColumna, rows].Value.ToString()));
                 }
             }
             return columna;
@@ -1234,24 +1399,43 @@ namespace Proyecto_MineriaDatos
             double media = Form2.medianaFunc(lista);
             double desviacionE = Form2.desviacionEstandarFunc(lista,media);
             double desviacionM = this.desviacionMedia(lista, media);
-            switch (opc)
+            if (index > -1)
             {
-                case 0:
-                    minMax(min,max,   ,index);
-                    break;
-                case 1:
-                    zScoreDesviacionEstandar(media,desviacionE,index);
-                    break;
-                case 2:
-                    zScoreDesviacionMedia(media,desviacionM,index);
-                    break;
+                using (Normalizar frm = new Normalizar())
+                {
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        opc = frm.getOpc();
+                        switch (opc)
+                        {
+                            case 0:
+                                minMax(min, max, frm.getMin(), frm.getMax(), index);
+                                break;
+                            case 1:
+                                zScoreDesviacionEstandar(media, desviacionE, index);
+                                break;
+                            case 2:
+                                zScoreDesviacionMedia(media, desviacionM, index);
+                                break;
+                        }
+                        MessageBox.Show("Valores Remplazados Correctamente");
+                    }
+
+                }
             }
+            else
+            {
+                MessageBox.Show("Selecciona un atributo(Columna)");
+            }
+            
+                
         }
         public void minMax(double min, double max,
             double nuevoMin, double nuevoMax, int index)
         {
             //iteramos todas las filas
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            for (int i = 0; i < dataGridView.Rows.Count- 1; i++)
             {
                 if (dataGridView[index, i] != null
                     && dataGridView[index, i].Value != DBNull.Value
@@ -1273,7 +1457,7 @@ namespace Proyecto_MineriaDatos
         {
             //se tiene que calcular media y 
             //iteramos todas las filas
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
             {
                 if (dataGridView[index, i] != null
                     && dataGridView[index, i].Value != DBNull.Value
@@ -1294,7 +1478,7 @@ namespace Proyecto_MineriaDatos
             double desviacionMedia, int index)
         {
             //iteramos todas las filas
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
             {
                 if (dataGridView[index, i] != null
                     && dataGridView[index, i].Value != DBNull.Value
@@ -1319,7 +1503,10 @@ namespace Proyecto_MineriaDatos
             {
                 acumulador += Math.Abs(value - media);
             }
-            return (1 / lista.Count) * acumulador;
+            double num = lista.Count;
+            double div = (1 / num);
+            double resultado = div * acumulador;
+            return resultado;
         }
     }
 }

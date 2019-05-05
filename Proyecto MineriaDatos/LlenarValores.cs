@@ -13,8 +13,8 @@ namespace Proyecto_MineriaDatos
     public partial class LlenarValores : Form
     {
         string opcion;
-        public LlenarValores(string nombreAtributo, float media,
-            float mediana, float moda)
+        public LlenarValores(string nombreAtributo, double media,
+            double mediana, double moda)
         {
             InitializeComponent();
             mediana_lbl.Text = mediana.ToString();

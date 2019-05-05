@@ -147,7 +147,6 @@
             this.desviacionE_lbl.Size = new System.Drawing.Size(46, 17);
             this.desviacionE_lbl.TabIndex = 8;
             this.desviacionE_lbl.Text = "label8";
-            this.desviacionE_lbl.Click += new System.EventHandler(this.label8_Click);
             // 
             // label9
             // 

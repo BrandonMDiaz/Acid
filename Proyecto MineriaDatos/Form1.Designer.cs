@@ -64,6 +64,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.info_btn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -117,6 +118,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(246)))));
+            this.tabPage1.Controls.Add(this.info_btn);
             this.tabPage1.Controls.Add(this.btn_guardar_como);
             this.tabPage1.Controls.Add(this.salir);
             this.tabPage1.Controls.Add(this.btnCargar);
@@ -548,6 +550,22 @@
             this.panel3.Size = new System.Drawing.Size(1094, 51);
             this.panel3.TabIndex = 10;
             // 
+            // info_btn
+            // 
+            this.info_btn.BackColor = System.Drawing.Color.White;
+            this.info_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(83)))), ((int)(((byte)(85)))));
+            this.info_btn.FlatAppearance.BorderSize = 3;
+            this.info_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.info_btn.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.info_btn.Image = ((System.Drawing.Image)(resources.GetObject("info_btn.Image")));
+            this.info_btn.Location = new System.Drawing.Point(529, 5);
+            this.info_btn.Name = "info_btn";
+            this.info_btn.Size = new System.Drawing.Size(169, 77);
+            this.info_btn.TabIndex = 6;
+            this.info_btn.Text = "Informacion";
+            this.info_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.info_btn.UseVisualStyleBackColor = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -616,6 +634,7 @@
         private System.Windows.Forms.Label instancias_totales_lbl;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button borrar_columna_btn;
+        private System.Windows.Forms.Button info_btn;
     }
 }
 

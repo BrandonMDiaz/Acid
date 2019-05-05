@@ -15,8 +15,8 @@ namespace Proyecto_MineriaDatos
         bool sustituir = false;
         bool sustituir_iqr5 = false;
 
-        public Outliers(List<List<float>> listas,
-            string nombreAtributo, float valorSustituir)
+        public Outliers(List<List<double>> listas,
+            string nombreAtributo, double valorSustituir)
         {
             InitializeComponent();
             foreach (var data in listas[0])

@@ -13,14 +13,14 @@ namespace Proyecto_MineriaDatos
     public partial class Form2 : Form
     {
         //lista de listas que contiene las columnas
-        List<List<float>> numericosFlotantes;
+        List<List<double>> numericosFlotantes;
         //total de instancias que tienen las columnas
         int totalInstancias;
         //Nombre de cada columna
         List<string> nombreColumnas;
 
         //constructor
-        public Form2(int instancias, List<List<float>> listaFlotantes,
+        public Form2(int instancias, List<List<double>> listaFlotantes,
             List<string> nombres)
         {
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace Proyecto_MineriaDatos
         }
 
         //sacar moda 
-        static public float modaFunc(List<float> numbers)
+        static public double modaFunc(List<double> numbers)
         {
             var moda = numbers.GroupBy(n => n). // ordena
             OrderByDescending(g => g.Count()). //ordena descendentes de mas repetidos
@@ -48,11 +48,11 @@ namespace Proyecto_MineriaDatos
             return moda;
         }
         //sacar mediana (enviar lista ordenada)
-        static public float medianaFunc(List<float> numbers)
+        static public double medianaFunc(List<double> numbers)
         {
             int numberCount = numbers.Count();
             int halfIndex = numbers.Count() / 2;
-            float median;
+            double median;
             if ((numberCount % 2) == 0)
             {
                 median = ( (numbers.ElementAt(halfIndex) +
@@ -66,36 +66,34 @@ namespace Proyecto_MineriaDatos
         }
 
         //funcion para calcular desviacion estandar
-        static public float desviacionEstandarFunc(List<float> lista, float media)
+        static public double desviacionEstandarFunc(List<double> lista, double media)
         {
 
-            float desviacionEstandar = 0;
+            double desviacionEstandar = 0;
             for (int i = 0; i < lista.Count; i++)
             {
                 desviacionEstandar = (lista.ElementAt(i) - media) * (lista.ElementAt(i) - media);
             }
-            return (float)Math.Sqrt(desviacionEstandar / lista.Count);
+            return (double)Math.Sqrt(desviacionEstandar / lista.Count);
         }
         //funcion que va a generar un boxplot
         private void boxPlot(int index)
         {
-            List<float> columna = numericosFlotantes[index];
+            List<double> columna = numericosFlotantes[index];
             columna.Sort();
 
 
-            float media = columna.Average();
-            float mediana = medianaFunc(columna);
-            mediana_lbl.Text = mediana.ToString();
-            media_lbl.Text = media.ToString();
-            moda_lbl.Text = modaFunc(columna).ToString();
-            desviacionE_lbl.Text = desviacionEstandarFunc(columna,media).ToString();
+            double media = columna.Average();
+            double mediana = medianaFunc(columna);
+            double moda = modaFunc(columna);
+            double desviacionE = desviacionEstandarFunc(columna, media);
 
-            float min = columna.Min();
-            float max = columna.Max();
+            double min = columna.Min();
+            double max = columna.Max();
             //float max = columna[columna.Count() - 1];
-            float q1;
-            float q2 = mediana;
-            float q3;
+            double q1;
+            double q2 = mediana;
+            double q3;
 
             //sacar q1
             int mid25 = (columna.Count() / 2) / 2;
@@ -122,30 +120,36 @@ namespace Proyecto_MineriaDatos
             {
                 q3 = columna.ElementAt(mid75);
             }
-            q1_lbl.Text = q1.ToString();
-            q3_lbl.Text = q3.ToString();
+            
 
             chart1.Series.Clear();
             chart1.Series.Add(nombreColumnas[index]).ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.BoxPlot;
-
             chart1.Series[nombreColumnas[index]].Points.AddXY(0,min,max, q1, q3);
-        }
-        private void label8_Click(object sender, EventArgs e)
-        {
 
-        }
-        //se seleccione otra clase en el combo box
-        private void clases_cb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-           
+            //min = Math.Truncate(min * 100) / 100;
+            //max = Math.Truncate(max * 100) / 100;
+            q3 = Math.Truncate(q3 * 100) / 100;
+            q1 = Math.Truncate(q1 * 100) / 100;
+
+            mediana = Math.Truncate(mediana * 100) / 100;
+            media = Math.Truncate(media * 100) / 100;
+            moda = Math.Truncate(moda * 100) / 100;
+            desviacionE = Math.Truncate(desviacionE * 100) / 100;
+
+            mediana_lbl.Text = mediana.ToString();
+            media_lbl.Text = media.ToString();
+            moda_lbl.Text = moda.ToString();
+            desviacionE_lbl.Text = desviacionE.ToString();
+            q1_lbl.Text = q1.ToString();
+            q3_lbl.Text = q3.ToString();
         }
 
-        static public List<List<float>> outliers(List<float> columna)
+        static public List<List<double>> outliers(List<double> columna)
         {
             columna.Sort();
 
-            float q1;
-            float q3;
+            double q1;
+            double q3;
 
             //sacar q1
             int mid25 = (columna.Count() / 2) / 2;
@@ -173,11 +177,11 @@ namespace Proyecto_MineriaDatos
             }
 
             //sacar outliers
-            List<List<float>> outliersLista = new List<List<float>>();
-            List<float> iqr15 = new List<float>();
-            List<float> iqr30 = new List<float>();
+            List<List<double>> outliersLista = new List<List<double>>();
+            List<double> iqr15 = new List<double>();
+            List<double> iqr30 = new List<double>();
 
-            float rangoIntercuartil = q3 - q1;
+            double rangoIntercuartil = q3 - q1;
 
             foreach (var valor in columna)
             {
