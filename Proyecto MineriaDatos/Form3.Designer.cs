@@ -68,9 +68,6 @@
             // 
             this.tipo_cb.FormattingEnabled = true;
             this.tipo_cb.Items.AddRange(new object[] {
-            "System.Int",
-            "System.String",
-            "System.Float",
             "numeric",
             "nominal",
             "ordinal",

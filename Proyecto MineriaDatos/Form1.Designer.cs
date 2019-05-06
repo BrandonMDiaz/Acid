@@ -464,9 +464,8 @@
             this.instancias_totales_lbl.AutoSize = true;
             this.instancias_totales_lbl.Location = new System.Drawing.Point(123, 175);
             this.instancias_totales_lbl.Name = "instancias_totales_lbl";
-            this.instancias_totales_lbl.Size = new System.Drawing.Size(35, 13);
+            this.instancias_totales_lbl.Size = new System.Drawing.Size(0, 13);
             this.instancias_totales_lbl.TabIndex = 13;
-            this.instancias_totales_lbl.Text = "label7";
             // 
             // label7
             // 
@@ -482,36 +481,32 @@
             this.nombre_lbl.AutoSize = true;
             this.nombre_lbl.Location = new System.Drawing.Point(123, 38);
             this.nombre_lbl.Name = "nombre_lbl";
-            this.nombre_lbl.Size = new System.Drawing.Size(35, 13);
+            this.nombre_lbl.Size = new System.Drawing.Size(0, 13);
             this.nombre_lbl.TabIndex = 11;
-            this.nombre_lbl.Text = "label9";
             // 
             // tipo_dato_lbl
             // 
             this.tipo_dato_lbl.AutoSize = true;
             this.tipo_dato_lbl.Location = new System.Drawing.Point(123, 72);
             this.tipo_dato_lbl.Name = "tipo_dato_lbl";
-            this.tipo_dato_lbl.Size = new System.Drawing.Size(35, 13);
+            this.tipo_dato_lbl.Size = new System.Drawing.Size(0, 13);
             this.tipo_dato_lbl.TabIndex = 10;
-            this.tipo_dato_lbl.Text = "label8";
             // 
             // proporcion_lbl
             // 
             this.proporcion_lbl.AutoSize = true;
             this.proporcion_lbl.Location = new System.Drawing.Point(123, 141);
             this.proporcion_lbl.Name = "proporcion_lbl";
-            this.proporcion_lbl.Size = new System.Drawing.Size(35, 13);
+            this.proporcion_lbl.Size = new System.Drawing.Size(0, 13);
             this.proporcion_lbl.TabIndex = 9;
-            this.proporcion_lbl.Text = "label7";
             // 
             // valores_faltantes_lbl
             // 
             this.valores_faltantes_lbl.AutoSize = true;
             this.valores_faltantes_lbl.Location = new System.Drawing.Point(123, 109);
             this.valores_faltantes_lbl.Name = "valores_faltantes_lbl";
-            this.valores_faltantes_lbl.Size = new System.Drawing.Size(35, 13);
+            this.valores_faltantes_lbl.Size = new System.Drawing.Size(0, 13);
             this.valores_faltantes_lbl.TabIndex = 8;
-            this.valores_faltantes_lbl.Text = "label6";
             // 
             // button1
             // 

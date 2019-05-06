@@ -72,7 +72,7 @@ namespace Proyecto_MineriaDatos
             double desviacionEstandar = 0;
             for (int i = 0; i < lista.Count; i++)
             {
-                desviacionEstandar = (lista.ElementAt(i) - media) * (lista.ElementAt(i) - media);
+                desviacionEstandar += (lista.ElementAt(i) - media) * (lista.ElementAt(i) - media);
             }
             return (double)Math.Sqrt(desviacionEstandar / lista.Count);
         }

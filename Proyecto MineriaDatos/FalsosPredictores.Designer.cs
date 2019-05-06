@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.nombre_lbl = new System.Windows.Forms.Label();
             this.coeficiente_lbl = new System.Windows.Forms.Label();
+            this.posible_lbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // valores_lb
@@ -47,11 +48,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(35, 19);
+            this.label1.Location = new System.Drawing.Point(74, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(337, 22);
+            this.label1.Size = new System.Drawing.Size(260, 22);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Valores con una correlacion mayor a  0.5";
+            this.label1.Text = "Valores con posible correlacion";
             // 
             // nombre_lbl
             // 
@@ -72,11 +73,22 @@
             this.coeficiente_lbl.Size = new System.Drawing.Size(0, 20);
             this.coeficiente_lbl.TabIndex = 3;
             // 
+            // posible_lbl
+            // 
+            this.posible_lbl.AutoSize = true;
+            this.posible_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.posible_lbl.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.posible_lbl.Location = new System.Drawing.Point(112, 248);
+            this.posible_lbl.Name = "posible_lbl";
+            this.posible_lbl.Size = new System.Drawing.Size(0, 20);
+            this.posible_lbl.TabIndex = 4;
+            // 
             // FalsosPredictores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(411, 273);
+            this.ClientSize = new System.Drawing.Size(411, 310);
+            this.Controls.Add(this.posible_lbl);
             this.Controls.Add(this.coeficiente_lbl);
             this.Controls.Add(this.nombre_lbl);
             this.Controls.Add(this.label1);
@@ -97,5 +109,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label nombre_lbl;
         private System.Windows.Forms.Label coeficiente_lbl;
+        private System.Windows.Forms.Label posible_lbl;
     }
 }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
+using System.Text.RegularExpressions;
 
 namespace Proyecto_MineriaDatos
 {
@@ -230,7 +231,31 @@ namespace Proyecto_MineriaDatos
                         adapter.FillSchema(dt, SchemaType.Source);
                         for (int i = 0; i < dt.Columns.Count; i++)
                         {
-                            this.tipoDeDato.Add(dt.Columns[i].DataType.ToString());
+                            this.dominio.Add("");
+                            string tipoData = dt.Columns[i].DataType.ToString();
+                            string aux = "";
+                            switch (tipoData)
+                            {
+                                case "System.String":
+                                    aux = "nominal";
+                                    break;
+                                case "System.Int32":
+                                    aux = "numeric";
+                                    break;
+                                case "System.Float":
+                                    aux = "numeric";
+                                    break;
+                                case "System.Double":
+                                    aux = "numeric";
+                                    break;
+                                case "System.DateTime":
+                                    aux = "DateTime";
+                                    break;
+                                default:
+                                    aux = "nominal";
+                                    break;
+                            }
+                            this.tipoDeDato.Add(aux);
                           
                             if (dt.Columns[i].DataType != typeof(string))
                                 dt.Columns[i].DataType = typeof(string);
@@ -406,7 +431,7 @@ namespace Proyecto_MineriaDatos
                     columnNombre = frm.getNombre();
                     columnTipo = frm.getTipo();
                     dataGridView.Columns.Add(columnNombre, columnNombre);
-                    dataGridView.Columns[dataGridView.Columns.Count - 1].ValueType = System.Type.GetType("System." + columnTipo);
+                    dataGridView.Columns[dataGridView.Columns.Count - 1].ValueType = System.Type.GetType("System.String");
                     this.tipoDeDato.Add(columnTipo);
                     this.dominio.Add(dominio);
 
@@ -504,7 +529,7 @@ namespace Proyecto_MineriaDatos
                 switch (tipoDeDato)
                 {
                     case "System.Int32":
-                        tipoDeDato2 = "Int";
+                        tipoDeDato2 = "numeric";
                         //revisa si la celda tiene asignado un valor, si no lo tiene
                         //entonces se le asigna un ? y se sube el contador
                         if (dataGridView[e.ColumnIndex, rows].Value == null
@@ -524,7 +549,7 @@ namespace Proyecto_MineriaDatos
                         }
                         break;
                     case "System.String":
-                        tipoDeDato2 = "String";
+                        tipoDeDato2 = "nominal";
                         //revisa si la celda tiene asignado un valor, si no lo tiene
                         //entonces se le asigna un ? y se sube el contador
                         if (dataGridView[e.ColumnIndex, rows].Value == null
@@ -544,7 +569,7 @@ namespace Proyecto_MineriaDatos
                         }
                         break;
                     case "System.Float":
-                        tipoDeDato2 = "Float";
+                        tipoDeDato2 = "numeric";
                         //revisa si la celda tiene asignado un valor, si no lo tiene
                         //entonces se le asigna un ? y se sube el contador
                         if (dataGridView[e.ColumnIndex, rows].Value == null
@@ -563,7 +588,7 @@ namespace Proyecto_MineriaDatos
                         }
                         break;
                     case "System.Double":
-                        tipoDeDato2 = "Double";
+                        tipoDeDato2 = "numeric";
                         //revisa si la celda tiene asignado un valor, si no lo tiene
                         //entonces se le asigna un ? y se sube el contador
                         if (dataGridView[e.ColumnIndex, rows].Value == null
@@ -648,8 +673,10 @@ namespace Proyecto_MineriaDatos
                 //creamos una lista donde meteremos toda 1 columna
                 List<double> list = new List<double>();
                 //No tomamos en cuenta las columnas tipo string
-                if (tipoDeDato != "System.String" && tipoDeDato != "System.DateTime"
-                    && tipoDeDato != "categorico" && tipoDeDato != "nominal"
+                MessageBox.Show(tipoDeDato);
+                if (tipoDeDato != "String" && tipoDeDato != "System.String" 
+                    && tipoDeDato != "DateTime"
+                    && tipoDeDato != "nominal"
                     && tipoDeDato != "bool" && tipoDeDato != "ordinal")
                 {
                     //iteramos sobre toda 1 columna
@@ -696,8 +723,8 @@ namespace Proyecto_MineriaDatos
                 //creamos una lista donde meteremos toda 1 columna
                 List<string> list = new List<string>();
                 //Solo tomamos en cuenta las columnas de string (categoricas)
-                if (tipoDeDato == "System.String" 
-                    || tipoDeDato == "categorico" || tipoDeDato == "nominal"
+                if (tipoDeDato == "String" || tipoDeDato == "System.String"
+                    || tipoDeDato == "DateTime" || tipoDeDato == "nominal"
                     || tipoDeDato == "bool" || tipoDeDato == "ordinal")
                 {
                     //iteramos sobre toda 1 columna
@@ -738,7 +765,7 @@ namespace Proyecto_MineriaDatos
                 //sacamos nombre de la columna 
                 string nombreColumna = dataGridView.Columns[this.indexColumna].Name.ToString();
                 //si es categorico se maneja diferente a si es numerico
-                if (tipoDeDato == "System.String" || tipoDeDato == "categorico" || tipoDeDato == "nominal"
+                if (tipoDeDato == "String" || tipoDeDato == "System.String" || tipoDeDato == "DateTime" || tipoDeDato == "nominal"
                     || tipoDeDato == "bool" || tipoDeDato == "ordinal")
                 {
                     //lista donde guardaremos toda la columna que selecciono el usuario
@@ -887,9 +914,9 @@ namespace Proyecto_MineriaDatos
         private void outliers_btn_Click(object sender, EventArgs e)
         {
             if (dataGridView.Columns.Count > 0 && dataGridView.Rows.Count > 0 
+                && this.tipoDeDato[this.indexColumna] != "String"
                 && this.tipoDeDato[this.indexColumna] != "System.String"
-                && this.tipoDeDato[this.indexColumna] != "categorico" 
-                && tipoDeDato[this.indexColumna] != "nominal"
+                && this.tipoDeDato[this.indexColumna] != "nominal"
                 && this.tipoDeDato[this.indexColumna] != "bool"
                 && this.tipoDeDato[this.indexColumna] != "ordinal")
             {
@@ -1000,37 +1027,61 @@ namespace Proyecto_MineriaDatos
 
         private void tipografia_btn_Click(object sender, EventArgs e)
         {
+            int index = this.indexColumna;
+            int indexExp = this.indexColumna;
             if((this.indexColumna > 0) && 
-                (this.tipoDeDato[this.indexColumna] == "System.String"
-                || this.tipoDeDato[this.indexColumna] == "categorico"
+                (this.tipoDeDato[this.indexColumna] == "String"
+                || this.tipoDeDato[this.indexColumna] == "System.String"
                 || tipoDeDato[this.indexColumna] == "nominal"
                 || this.tipoDeDato[this.indexColumna] == "bool"
                 || this.tipoDeDato[this.indexColumna] == "ordinal"))
             {
-                int index = this.indexColumna;
-                List<string> columna = columnToListString(this.indexColumna);
-                Dictionary<string, int> frecuencia = new Dictionary<string, int>();
-                foreach (string elemento in columna)
-                {
-                    if (!frecuencia.ContainsKey(elemento))
-                        frecuencia.Add(elemento, 1);
-                    else
-                        frecuencia[elemento]++;
-                }
-
                 List<string> posibleErrorTipografico = new List<string>();
+                Dictionary<string, int> frecuencia = new Dictionary<string, int>();
                 List<string> datosBase = new List<string>();
 
-                //value es el nombre y frecuencia[key] un entero de cuanto se repitio
-                foreach (string value in frecuencia.Keys)
+                if (this.dominio.Count > -1 && this.dominio[indexExp] != "")
                 {
-                    datosBase.Add(value);
-                    //posible palabra mal escrita
-                    if (frecuencia[value] < 3) {
-                        posibleErrorTipografico.Add(value);
+                    string expresionRegular = this.dominio[indexExp];
+                    for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
+                    {
+                        string input = dataGridView[indexExp,i].Value.ToString();
+                        var match = Regex.Match(input, expresionRegular, RegexOptions.IgnoreCase);
+                        if (!datosBase.Contains(input))
+                        {
+                            datosBase.Add(input);
+                        }
+                        if (!match.Success)
+                        {
+                            posibleErrorTipografico.Add(input);
+                        }
+                    }   
+                }
+                //sacar valores posiblemente mal escritos
+                else
+                {
+                    List<string> columna = columnToListString(this.indexColumna);
+                    //sacamos frecuencia
+                    foreach (string elemento in columna)
+                    {
+                        if (!frecuencia.ContainsKey(elemento))
+                            frecuencia.Add(elemento, 1);
+                        else
+                            frecuencia[elemento]++;
+                    }
+                    //value es el nombre y frecuencia[key] un entero de cuanto se repitio
+                    foreach (string value in frecuencia.Keys)
+                    {
+                        datosBase.Add(value);
+                        //posible palabra mal escrita
+                        if (frecuencia[value] < 3)
+                        {
+                            posibleErrorTipografico.Add(value);
+                        }
                     }
                 }
-                //falta buscar valores fuera del rango
+
+               
                 using (Tipografia frm = new Tipografia(posibleErrorTipografico, datosBase))
                 {
                     var result = frm.ShowDialog();
@@ -1075,17 +1126,67 @@ namespace Proyecto_MineriaDatos
 
         private void correlacion_btn_Click(object sender, EventArgs e)
         {
-            chiCuadrada(1,1);
-            pearson(1,1);
+            if (dataGridView.Columns.Count > 0)
+            {
+                List<double> valores = new List<double>();
+                List<string> nombreColumnas = new List<string>();
+                List<string> tipoDato = new List<string>();
+                for (int i = 0; i < dataGridView.Columns.Count; i++)
+                {
+                    for (int x = i + 1; x < dataGridView.Columns.Count; x++)
+                    {
+                        //si los tipos de datos son iguales
+                        if (this.tipoDeDato[i] == this.tipoDeDato[x] || 
+                            (
+                            (this.tipoDeDato[i] == "nominal" ||
+                             this.tipoDeDato[i] == "ordinal" ||
+                             this.tipoDeDato[i] == "bool"
+                             )
+                             && this.tipoDeDato[x] != "numeric"
+                             && this.tipoDeDato[x] != "DateTime"
+                             )
+                             )
+                        {
+                            //se calcula pearson
+                            if (this.tipoDeDato[i] == "numeric")
+                            {
+                                tipoDato.Add(this.tipoDeDato[i]);
+                                string nombre1 = dataGridView.Columns[i].Name;
+                                string nombre2 = dataGridView.Columns[x].Name;
+                                double val = this.pearson(i,x);
+                                valores.Add(val);
+
+                                string nombreFinal = nombre1 + " - " + nombre2;
+                                nombreColumnas.Add(nombreFinal);
+                            }
+                            //se calcula tschuprow
+                            else
+                            {
+                                tipoDato.Add(this.tipoDeDato[i]);
+                                string nombre1 = dataGridView.Columns[i].Name;
+                                string nombre2 = dataGridView.Columns[x].Name;
+                                double val = this.chiCuadrada(i, x);
+                                valores.Add(val);
+
+                                string nombreFinal = nombre1 + " - " + nombre2;
+                                nombreColumnas.Add(nombreFinal);
+                            }
+                        }
+                    }
+                }
+
+                using (Correlacion frm = new Correlacion(valores,nombreColumnas,
+                    tipoDato))
+                {
+                    frm.ShowDialog();
+                }
+            }
         }
        //funcion para calcular el coeficiente de pearson
         public double pearson(int index1, int index2)
         {
-            MessageBox.Show(tipoDeDato[index1]);
             //se busca que se comparen numericos con numericos 
-            if (tipoDeDato[index1] == tipoDeDato[index2] 
-                || (tipoDeDato[index1] == "float" && tipoDeDato[index2] == "int")
-                || (tipoDeDato[index1] == "int" && tipoDeDato[index2] == "float") )
+            if (tipoDeDato[index1] == tipoDeDato[index2] && tipoDeDato[index1] == "numeric")
             {
                 List<double> columna1 = columnToListFloat(index1);
                 List<double> columna2 = columnToListFloat(index2);
@@ -1107,7 +1208,7 @@ namespace Proyecto_MineriaDatos
                     sumatoria += (columna1[i] - media1) * (columna2[i] - media2);
                 }
                 double abajo = desviacionEstandar1 * desviacionEstandar2 * (dataGridView.Rows.Count - 1);
-                return abajo;
+                return sumatoria/abajo;
             }
             else
             {
@@ -1115,12 +1216,13 @@ namespace Proyecto_MineriaDatos
             }
         }
 
-        public void chiCuadrada(int index1,int index2)
+        public double chiCuadrada(int index1, int index2)
         {
             //se trabaja con los valores categoricos
             if (this.tipoDeDato[index1] == this.tipoDeDato[index2]
-                && (this.tipoDeDato[index1] == "System.String"
-                || this.tipoDeDato[this.indexColumna] == "categorico"))
+                && (this.tipoDeDato[index1] == "String"
+                || this.tipoDeDato[index1] == "nominal"
+                || this.tipoDeDato[index1] == "System.String"))
             {
                 List<string> datosBase1 = new List<string>();
                 List<string> datosBase2 = new List<string>();
@@ -1205,8 +1307,9 @@ namespace Proyecto_MineriaDatos
                     chicuadrada/
                     (totalValores * 
                     Math.Sqrt( (datosBase1.Count - 1) * (datosBase2.Count -1)) )   );
-                MessageBox.Show(tschuprow.ToString());
+                return tschuprow;
             }
+            return -1;
         }
 
         /// <summary>
@@ -1226,7 +1329,7 @@ namespace Proyecto_MineriaDatos
                     && (string)dataGridView[index, rows].Value != "?")
                 {
                     //agregamos el valor a la lista 
-                    columna.Add(double.Parse(dataGridView[this.indexColumna, rows].Value.ToString()));
+                    columna.Add(double.Parse(dataGridView[index, rows].Value.ToString()));
                 }
             }
             return columna;
@@ -1244,7 +1347,7 @@ namespace Proyecto_MineriaDatos
                     && (string)dataGridView[index, rows].Value != "?")
                 {
                     //agregamos el valor a la lista 
-                    columna.Add(dataGridView[this.indexColumna, rows].Value.ToString());
+                    columna.Add(dataGridView[index, rows].Value.ToString());
                 }
             }
             return columna;
@@ -1439,44 +1542,46 @@ namespace Proyecto_MineriaDatos
 
         private void normalizacion_btn_Click(object sender, EventArgs e)
         {
-            int opc = 0;
-            int index = this.indexColumna;
-            List<double> lista = columnToListFloat(index);
-            double min = lista.Min();
-            double max = lista.Max();
-            double media = Form2.medianaFunc(lista);
-            double desviacionE = Form2.desviacionEstandarFunc(lista,media);
-            double desviacionM = this.desviacionMedia(lista, media);
-            if (index > -1)
+            if (this.indexColumna > -1 && this.tipoDeDato[this.indexColumna] == "numeric")
             {
-                using (Normalizar frm = new Normalizar())
+                int opc = 0;
+                int index = this.indexColumna;
+                List<double> lista = columnToListFloat(index);
+                double min = lista.Min();
+                double max = lista.Max();
+                double media = Form2.medianaFunc(lista);
+                double desviacionE = Form2.desviacionEstandarFunc(lista, media);
+                double desviacionM = this.desviacionMedia(lista, media);
+                if (index > -1)
                 {
-
-                    if (frm.ShowDialog() == DialogResult.OK)
+                    using (Normalizar frm = new Normalizar())
                     {
-                        opc = frm.getOpc();
-                        switch (opc)
-                        {
-                            case 0:
-                                minMax(min, max, frm.getMin(), frm.getMax(), index);
-                                break;
-                            case 1:
-                                zScoreDesviacionEstandar(media, desviacionE, index);
-                                break;
-                            case 2:
-                                zScoreDesviacionMedia(media, desviacionM, index);
-                                break;
-                        }
-                        MessageBox.Show("Valores Remplazados Correctamente");
-                    }
 
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            opc = frm.getOpc();
+                            switch (opc)
+                            {
+                                case 0:
+                                    minMax(min, max, frm.getMin(), frm.getMax(), index);
+                                    break;
+                                case 1:
+                                    zScoreDesviacionEstandar(media, desviacionE, index);
+                                    break;
+                                case 2:
+                                    zScoreDesviacionMedia(media, desviacionM, index);
+                                    break;
+                            }
+                            MessageBox.Show("Valores Remplazados Correctamente");
+                        }
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Selecciona un atributo(Columna)");
                 }
             }
-            else
-            {
-                MessageBox.Show("Selecciona un atributo(Columna)");
-            }
-            
                 
         }
         public void minMax(double min, double max,
@@ -1559,15 +1664,78 @@ namespace Proyecto_MineriaDatos
 
         private void falsos_predictores_btn_Click_1(object sender, EventArgs e)
         {
-            //if ()
-            //{
+            int indexClaseObjetivo = this.claseObjetivo;
+            if (indexClaseObjetivo > -1)
+            {
+                //revisar tipo de dato
+                if (this.tipoDeDato[indexClaseObjetivo] == "numeric")
+                {
+                    List<int> columnasNumeric = new List<int>();
+                    //obtener columnas numericas
+                    for (int i = 0; i < dataGridView.Columns.Count; i++)
+                    {
+                        if (this.tipoDeDato[i] == "numeric")
+                        {
+                            columnasNumeric.Add(i);
+                        }
+                    }
+                    double pearson;
+                    List<double> posiblesCorrelacion = new List<double>();
+                    List<string> nombreColumnas = new List<string>();
+                    foreach (var index in columnasNumeric)
+                    {
 
-            //}
-            //using (FalsosPredictores frm = new FalsosPredictores(List<string> valores,
-            //List<double> val, List<string> nombreColumnas))
-            //{
+                        pearson = this.pearson(indexClaseObjetivo, index);
+                        posiblesCorrelacion.Add(pearson);
+                        nombreColumnas.Add(dataGridView.Columns[index].Name);
 
-            //}
+                    }
+                    using (FalsosPredictores frm = new FalsosPredictores(
+                        posiblesCorrelacion, nombreColumnas, true))
+                    {
+                        frm.ShowDialog();
+
+                    }
+                }
+                else if (this.tipoDeDato[indexClaseObjetivo] == "nominal"
+                    || this.tipoDeDato[indexClaseObjetivo] == "System.String"
+                    || this.tipoDeDato[indexClaseObjetivo] == "bool"
+                    || this.tipoDeDato[indexClaseObjetivo] == "ordinal")
+                {
+                    List<int> columnasNominal = new List<int>();
+                    //obtener columnas numericas
+                    for (int i = 0; i < dataGridView.Columns.Count; i++)
+                    {
+                        if (this.tipoDeDato[i] == "nominal"
+                    || this.tipoDeDato[i] == "System.String"
+                    || this.tipoDeDato[i] == "bool"
+                    || this.tipoDeDato[i] == "ordinal")
+                        {
+                            columnasNominal.Add(i);
+                        }
+                    }
+                    double tschuprow;
+                    List<double> posiblesCorrelacion = new List<double>();
+                    List<string> nombreColumnas = new List<string>();
+                    bool numeric = false;
+
+                    foreach (var index in columnasNominal)
+                    {
+                        tschuprow = this.chiCuadrada(indexClaseObjetivo, index);
+                        posiblesCorrelacion.Add(tschuprow);
+                        nombreColumnas.Add(dataGridView.Columns[index].Name);
+                    }
+                    using (FalsosPredictores frm = new FalsosPredictores(
+                        posiblesCorrelacion, nombreColumnas, numeric))
+                    {
+                        frm.ShowDialog();
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Porfavor selecciona la clase objetivo");
+            }
         }
     }
 }

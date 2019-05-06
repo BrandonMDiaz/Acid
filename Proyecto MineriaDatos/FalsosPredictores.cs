@@ -12,39 +12,45 @@ namespace Proyecto_MineriaDatos
 {
     public partial class FalsosPredictores : Form
     {
-        List<string> categoricos = new List<string>();
         List<double> numericos = new List<double>();
-
-        public FalsosPredictores(List<string> valores,
-            List<double> val, List<string> nombreColumnas)
+        bool numeric;
+        public FalsosPredictores(List<double> valores,
+            List<string> nombreColumnas, bool numerico)
         {
             InitializeComponent();
+            numeric = numerico;
             foreach (var i in nombreColumnas)
             {
                 valores_lb.Items.Add(i);
             }
-            if (valores.Count > 0)
+            if (!numerico)
             {
-                categoricos = valores;
+                numericos = valores;
                 nombre_lbl.Text = "Tschuprow";
             }
             else
             {
-                numericos = val;
-                nombre_lbl.Text = "Chi-Cuadrada";
+                numericos = valores;
+                nombre_lbl.Text = "Pearson";
             }
         }
 
         private void valores_lb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (nombre_lbl.Text == "Tschuprow")
+            double coeficiente = numericos[valores_lb.SelectedIndex];
+            coeficiente_lbl.Text = coeficiente.ToString();
+            if (coeficiente > 0.5 && !numeric)
             {
-                coeficiente_lbl.Text = categoricos[valores_lb.SelectedIndex];
+                posible_lbl.Text = "** Valor con alta correlacion";
             }
-            else 
+            else if (coeficiente > 0.5 && coeficiente < -0.5 
+                && numeric)
             {
-                coeficiente_lbl.Text = numericos[valores_lb.SelectedIndex].ToString();
-
+                posible_lbl.Text = "** Valor con alta correlacion";
+            }
+            else
+            {
+                posible_lbl.Text = "";
             }
         }
     }
