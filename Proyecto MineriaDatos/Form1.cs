@@ -16,6 +16,8 @@ namespace Proyecto_MineriaDatos
 {
     public partial class Form1 : System.Windows.Forms.Form
     {
+        string nombreDataset = "";
+        string fileExtencion = "";
         int claseObjetivo = -1;
         //guarda el nombre del archivo abierto
         string fileName;
@@ -47,10 +49,13 @@ namespace Proyecto_MineriaDatos
         // funcion para leer un archivo .data
         public DataTable LeerData(string fileName)
         {
+            this.tipoDeDato.Clear();
+            this.dominio.Clear();
+            this.atributos.Clear();
             this.fileName = fileName;
             //DataTable dt = new DataTable("Data");
             DataTable dt = new DataTable("Data");
-
+            this.fileExtencion = ".data";
             //informacion general
             //descripcion de la base de datos
             //base de datos
@@ -68,7 +73,7 @@ namespace Proyecto_MineriaDatos
                 // 2 = base de datos
 
                 string info = "";
-                string relation; //nombre del dataset
+                string relation = ""; //nombre del dataset
                 List<string> attribute = new List<string>(); //datos en el dataset
                 string missingValue; //valor faltante
                 
@@ -133,6 +138,7 @@ namespace Proyecto_MineriaDatos
                 this.dominio = dominio;
                 this.atributos = atributos;
                 this.infoData = info;
+                this.nombreDataset = relation;
                 //
                 //
                 //agregar informacion al dt
@@ -218,6 +224,9 @@ namespace Proyecto_MineriaDatos
         public DataTable LeerCSV(string fileName)
         {
             this.tipoDeDato.Clear();
+            this.dominio.Clear();
+            this.atributos.Clear();
+            this.fileExtencion = ".csv";
             this.fileName = fileName;
             DataTable dt = new DataTable("Data");
             using (OleDbConnection cn = new OleDbConnection("Provider= Microsoft.jet.OLEDB.4.0;Data Source=\"" +
@@ -297,7 +306,39 @@ namespace Proyecto_MineriaDatos
                     sb.AppendLine(string.Join(",", fields));
                 }
 
-                File.WriteAllText(fileName, sb.ToString());
+                //agregar al archivo la otra informacion :3
+                if (this.fileExtencion == ".data")
+                {
+                    using (StreamWriter sw = File.AppendText(fileName))
+                    {
+                        //informacion
+                        sw.WriteLine(this.infoData);
+                        //nombre
+                        string nombre = "@relation " + this.nombreDataset;
+                        sw.WriteLine(nombre);
+                        //atributos
+                        //tipo de dato
+                        //dominio
+                        string attribute = "";
+                        for (int i = 0; i < this.tipoDeDato.Count; i++)
+                        {
+                            attribute = "@attribute " + 
+                                this.atributos[i] + " " +
+                                this.tipoDeDato[i] + " " +
+                                this.dominio[i];
+                            sw.WriteLine(attribute);
+                        }
+                        string missing = "@missingValue " + this.valorFaltante;
+                        sw.WriteLine(missing);
+                        sw.WriteLine("@data");
+                        sw.WriteLine(sb.ToString());
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(fileName, sb.ToString());
+                }
+
             }
             
         }
@@ -395,7 +436,7 @@ namespace Proyecto_MineriaDatos
             try
             {
 
-                using (SaveFileDialog ofd = new SaveFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
+                using (SaveFileDialog ofd = new SaveFileDialog() { Filter = "CSV|*.csv|DATA|*.data", ValidateNames = true })
                 {
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -673,7 +714,6 @@ namespace Proyecto_MineriaDatos
                 //creamos una lista donde meteremos toda 1 columna
                 List<double> list = new List<double>();
                 //No tomamos en cuenta las columnas tipo string
-                MessageBox.Show(tipoDeDato);
                 if (tipoDeDato != "String" && tipoDeDato != "System.String" 
                     && tipoDeDato != "DateTime"
                     && tipoDeDato != "nominal"
