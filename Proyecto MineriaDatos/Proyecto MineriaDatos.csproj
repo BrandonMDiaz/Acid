@@ -54,11 +54,23 @@
     <Compile Include="Buscar_remplazar.Designer.cs">
       <DependentUpon>Buscar_remplazar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Correlacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Correlacion.Designer.cs">
+      <DependentUpon>Correlacion.cs</DependentUpon>
+    </Compile>
     <Compile Include="editGridView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="editGridView.Designer.cs">
       <DependentUpon>editGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FalsosPredictores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FalsosPredictores.Designer.cs">
+      <DependentUpon>FalsosPredictores.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -119,8 +131,14 @@
     <EmbeddedResource Include="Buscar_remplazar.resx">
       <DependentUpon>Buscar_remplazar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Correlacion.resx">
+      <DependentUpon>Correlacion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="editGridView.resx">
       <DependentUpon>editGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FalsosPredictores.resx">
+      <DependentUpon>FalsosPredictores.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

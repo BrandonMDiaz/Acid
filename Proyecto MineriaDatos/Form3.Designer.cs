@@ -68,9 +68,14 @@
             // 
             this.tipo_cb.FormattingEnabled = true;
             this.tipo_cb.Items.AddRange(new object[] {
-            "Int",
-            "String",
-            "Float"});
+            "System.Int",
+            "System.String",
+            "System.Float",
+            "numeric",
+            "nominal",
+            "ordinal",
+            "bool",
+            "DateTime"});
             this.tipo_cb.Location = new System.Drawing.Point(130, 120);
             this.tipo_cb.Name = "tipo_cb";
             this.tipo_cb.Size = new System.Drawing.Size(186, 21);

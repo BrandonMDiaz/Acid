@@ -14,6 +14,8 @@ namespace Proyecto_MineriaDatos
     {
         private string nombre;
         private string tipo;
+        private string dom;
+
 
         public string Nombre
         {
@@ -25,6 +27,7 @@ namespace Proyecto_MineriaDatos
             get { return tipo; }
             set { tipo = value; }
         }
+
         public Form3()
         {
             nombre = "";
@@ -39,14 +42,19 @@ namespace Proyecto_MineriaDatos
         {
             return this.tipo;
         }
+        public string getDominio()
+        {
+            return this.dom;
+        }
         private void ok_btn_Click(object sender, EventArgs e)
         {
+            this.dom = dominio_tb.Text;
             if (nombre_txt.Text != null || nombre_txt.Text != ""
                 && tipo_cb.Text != null || tipo_cb.Text != "")
             {
                 Nombre = nombre_txt.Text;
-                if (tipo_cb.Text == "Int" || tipo_cb.Text == "String"
-                    || tipo_cb.Text == "Float")
+                if (tipo_cb.Text == "System.Int" || tipo_cb.Text == "System.String"
+                    || tipo_cb.Text == "System.Float")
                 {
                     if (tipo_cb.Text == "Int")
                     {

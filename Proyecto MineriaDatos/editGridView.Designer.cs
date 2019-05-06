@@ -35,6 +35,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tipo_cb = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -73,7 +74,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(109, 142);
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.Location = new System.Drawing.Point(107, 201);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(95, 23);
             this.button1.TabIndex = 4;
@@ -85,9 +87,14 @@
             // 
             this.tipo_cb.FormattingEnabled = true;
             this.tipo_cb.Items.AddRange(new object[] {
-            "Int",
-            "String",
-            "Float"});
+            "System.Int",
+            "System.String",
+            "System.Float",
+            "numeric",
+            "nominal",
+            "ordinal",
+            "boleano",
+            "fecha"});
             this.tipo_cb.Location = new System.Drawing.Point(134, 103);
             this.tipo_cb.Name = "tipo_cb";
             this.tipo_cb.Size = new System.Drawing.Size(173, 21);
@@ -103,11 +110,24 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Tipo de dato";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Location = new System.Drawing.Point(98, 155);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(115, 21);
+            this.checkBox1.TabIndex = 7;
+            this.checkBox1.Text = "Clase objetivo";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // editGridView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(319, 177);
+            this.ClientSize = new System.Drawing.Size(319, 236);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.tipo_cb);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
@@ -132,5 +152,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox tipo_cb;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

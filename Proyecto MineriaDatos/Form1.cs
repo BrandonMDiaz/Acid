@@ -15,6 +15,7 @@ namespace Proyecto_MineriaDatos
 {
     public partial class Form1 : System.Windows.Forms.Form
     {
+        int claseObjetivo = -1;
         //guarda el nombre del archivo abierto
         string fileName;
         //guardar informacion del archivo
@@ -42,7 +43,7 @@ namespace Proyecto_MineriaDatos
             InitializeComponent();
         }
 
-        // funcion para leer un archivo .data (aun no está terminada)
+        // funcion para leer un archivo .data
         public DataTable LeerData(string fileName)
         {
             this.fileName = fileName;
@@ -113,14 +114,18 @@ namespace Proyecto_MineriaDatos
                 foreach (var data in attribute)
                 {
                     string[] split = data.Split(null);
+                    //agregamos los atributos al tipo de dato
                     atributos.Add(split[1]);
-
+                    //agregamos dato al tipo de dato
                     tipoDeDato.Add(split[2]);
+                    //sacamos el dominio y lo agregamos a la lista
+                    //de dominio
                     string dominioTotal = "";
                     for (int i = 3; i < split.Count(); i++)
                     {
                         dominioTotal += split[i];
                     }
+                    dominio.Add(dominioTotal);
                 }
 
                 this.tipoDeDato = tipoDeDato;
@@ -392,7 +397,7 @@ namespace Proyecto_MineriaDatos
         {
             string columnNombre = ""; //nombre de la columna
             string columnTipo = ""; //tipo de dato de la columna
-
+            string dominio = "";
             //se abre el form3 que esta diseñado para pedir estos dos valores
             using (Form3 frm = new Form3())
             {
@@ -402,7 +407,9 @@ namespace Proyecto_MineriaDatos
                     columnTipo = frm.getTipo();
                     dataGridView.Columns.Add(columnNombre, columnNombre);
                     dataGridView.Columns[dataGridView.Columns.Count - 1].ValueType = System.Type.GetType("System." + columnTipo);
-                    this.tipoDeDato.Add("System." + columnTipo);
+                    this.tipoDeDato.Add(columnTipo);
+                    this.dominio.Add(dominio);
+
                     dataGridView.Columns[dataGridView.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                 }
@@ -415,30 +422,64 @@ namespace Proyecto_MineriaDatos
         private void dataGridView_ColumnHeaderMouseDoubleClick(object sender,
             DataGridViewCellMouseEventArgs e)
         {
+            int index = e.ColumnIndex;
             string columnName = dataGridView.Columns[e.ColumnIndex].Name;
-            editGridView edit = new editGridView(columnName, e.ColumnIndex);
-            edit.Show();
-            edit.FormClosed += new FormClosedEventHandler(Form_Closed);
+            string tipoDeDato = "";
+            string dominio = "";
+            if (this.dominio.Count > 0)
+            {
+                dominio = this.dominio[index];
+            }
+            if (this.tipoDeDato.Count > 0)
+            {
+                tipoDeDato = this.tipoDeDato[index];
+            }
 
+            using (editGridView frm = new editGridView(columnName, index,
+                dominio, tipoDeDato, index == this.claseObjetivo))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    //editar el nombre de la columna
+                    dataGridView.Columns[frm.getColumnIndex()].HeaderText = frm.getHeaderName();
+                    //editar expresion regular
+                    this.dominio[index] = frm.getDominio();
+                    //editar tipo de dato
+                    this.tipoDeDato[index] = frm.getTipoDeDato();
+                    //clase objetivo
+                    if (frm.getObjetivo())
+                    {
+                        //la clase objetivo se señala con el index
+                        //de ella
+                        this.claseObjetivo = index;
+                    }
+                }
+            }
+            //edit.Show();
+            //edit.FormClosed += new FormClosedEventHandler(Form_Closed);
         }
 
         //cuando se cierra el form de editar se llama a esta funcion para recibir los 
         //parametros que se agregaron en ese form
         private void Form_Closed(object sender, FormClosedEventArgs e)
         {
-            editGridView edit = (editGridView)sender;
-            dataGridView.Columns[edit.getColumnIndex()].HeaderText = edit.getHeaderName();
+            //editGridView edit = (editGridView)sender;
+            //dataGridView.Columns[edit.getColumnIndex()].HeaderText = edit.getHeaderName();
         }
 
         //eliminar una fila completa (eliminar instancia)
         private void dataGridView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dataGridView.SelectedRows.Count > 0 && dataGridView.SelectedRows.Count < 2 && e.KeyCode == Keys.Delete)
+            if (dataGridView.SelectedRows.Count > 0 
+                && dataGridView.SelectedRows.Count < 2 
+                && e.KeyCode == Keys.Delete)
             {
                 foreach (DataGridViewCell oneCell in dataGridView.SelectedCells)
                 {
-                    if (oneCell.Selected)
+                    if (oneCell.Selected && oneCell.RowIndex != 0)
+                    {
                         dataGridView.Rows.RemoveAt(oneCell.RowIndex);
+                    }
                 }
                 instancias_totales_lbl.Text = (dataGridView.Rows.Count - 1).ToString();
             }
@@ -582,6 +623,7 @@ namespace Proyecto_MineriaDatos
 
             }
             //missingValues -= 1;
+            this.tipoDeDato[this.indexColumna] = tipoDeDato2;
             nombre_lbl.Text = valueName;
             tipo_dato_lbl.Text = tipoDeDato2;
             valores_faltantes_lbl.Text = missingValues.ToString();
@@ -1023,17 +1065,23 @@ namespace Proyecto_MineriaDatos
         //funcion que borra una columna
         private void borrar_columna_btn_Click(object sender, EventArgs e)
         {
-            dataGridView.Columns.RemoveAt(this.indexColumna);
-            this.tipoDeDato.RemoveAt(this.indexColumna);
+            if (dataGridView.Columns.Count > 0)
+            {
+                dataGridView.Columns.RemoveAt(this.indexColumna);
+                this.tipoDeDato.RemoveAt(this.indexColumna);
+            }
+            
         }
 
         private void correlacion_btn_Click(object sender, EventArgs e)
         {
-            chiCuadrada(1,5);
+            chiCuadrada(1,1);
+            pearson(1,1);
         }
        //funcion para calcular el coeficiente de pearson
         public double pearson(int index1, int index2)
         {
+            MessageBox.Show(tipoDeDato[index1]);
             //se busca que se comparen numericos con numericos 
             if (tipoDeDato[index1] == tipoDeDato[index2] 
                 || (tipoDeDato[index1] == "float" && tipoDeDato[index2] == "int")
@@ -1507,6 +1555,19 @@ namespace Proyecto_MineriaDatos
             double div = (1 / num);
             double resultado = div * acumulador;
             return resultado;
+        }
+
+        private void falsos_predictores_btn_Click_1(object sender, EventArgs e)
+        {
+            //if ()
+            //{
+
+            //}
+            //using (FalsosPredictores frm = new FalsosPredictores(List<string> valores,
+            //List<double> val, List<string> nombreColumnas))
+            //{
+
+            //}
         }
     }
 }
