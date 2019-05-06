@@ -103,7 +103,6 @@ namespace Proyecto_MineriaDatos
                     }
                     else if (newLine.Contains("@missingValue"))
                     {
-
                         //separamos la string donde esté un espacio
                         string[] split = newLine.Split(null);
                         //guardamos el valor que se usara para indicar
@@ -116,23 +115,27 @@ namespace Proyecto_MineriaDatos
                 List<string> tipoDeDato = new List<string>();
                 List<string> dominio = new List<string>();
 
-                //tomamos los atributos del dataset
-                foreach (var data in attribute)
+                if (attribute.Count > 0)
                 {
-                    string[] split = data.Split(null);
-                    //agregamos los atributos al tipo de dato
-                    atributos.Add(split[1]);
-                    //agregamos dato al tipo de dato
-                    tipoDeDato.Add(split[2]);
-                    //sacamos el dominio y lo agregamos a la lista
-                    //de dominio
-                    string dominioTotal = "";
-                    for (int i = 3; i < split.Count(); i++)
+                    //tomamos los atributos del dataset
+                    foreach (var data in attribute)
                     {
-                        dominioTotal += split[i];
+                        string[] split = data.Split(null);
+                        //agregamos los atributos al tipo de dato
+                        atributos.Add(split[1]);
+                        //agregamos dato al tipo de dato
+                        tipoDeDato.Add(split[2]);
+                        //sacamos el dominio y lo agregamos a la lista
+                        //de dominio
+                        string dominioTotal = "";
+                        for (int i = 3; i < split.Count(); i++)
+                        {
+                            dominioTotal += split[i];
+                        }
+                        dominio.Add(dominioTotal);
                     }
-                    dominio.Add(dominioTotal);
                 }
+                
 
                 this.tipoDeDato = tipoDeDato;
                 this.dominio = dominio;
@@ -295,10 +298,18 @@ namespace Proyecto_MineriaDatos
             {
                 DataTable dt = (DataTable)(dataGridView.DataSource); //extraer la informacion del data grid view
                 StringBuilder sb = new StringBuilder();
-            
-                IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().
+
+                if (this.fileExtencion == ".data")
+                {
+                    
+                }
+                else
+                {
+                    IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().
                                                   Select(column => column.ColumnName);
-                sb.AppendLine(string.Join(",", columnNames));
+                    sb.AppendLine(string.Join(",", columnNames));
+                }
+                
 
                 foreach (DataRow row in dt.Rows)
                 {
@@ -320,13 +331,30 @@ namespace Proyecto_MineriaDatos
                         //tipo de dato
                         //dominio
                         string attribute = "";
-                        for (int i = 0; i < this.tipoDeDato.Count; i++)
+                        if (this.atributos.Count > 0 &&
+                            this.tipoDeDato.Count > 0 &&
+                            this.dominio.Count > 0)
                         {
-                            attribute = "@attribute " + 
-                                this.atributos[i] + " " +
-                                this.tipoDeDato[i] + " " +
-                                this.dominio[i];
-                            sw.WriteLine(attribute);
+                            for (int i = 0; i < this.tipoDeDato.Count; i++)
+                            {
+                                attribute = "@attribute " +
+                                    this.atributos[i] + " " +
+                                    this.tipoDeDato[i] + " " +
+                                    this.dominio[i];
+                                sw.WriteLine(attribute);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < dataGridView.Columns.Count; i++)
+                            {
+                                string nombreColumn = dataGridView.Columns[i].Name;
+
+                                attribute = "@attribute " +
+                                    nombreColumn + " " +
+                                    this.tipoDeDato[i];
+                                sw.WriteLine(attribute);
+                            }
                         }
                         string missing = "@missingValue " + this.valorFaltante;
                         sw.WriteLine(missing);
@@ -440,6 +468,9 @@ namespace Proyecto_MineriaDatos
                 {
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
+                        this.fileExtencion = Path.GetExtension(ofd.FileName);
+                        MessageBox.Show(this.fileExtencion);
+
                         guardarArchivo(ofd.FileName);
                         this.fileName = ofd.FileName;
                     }
